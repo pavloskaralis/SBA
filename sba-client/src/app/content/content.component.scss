@@ -1,0 +1,144 @@
+@import '../../styles.scss';
+
+.content-container{
+    $border-radius: 25px;
+
+    width: $breakpointB;
+    height: $breakpointD;
+    margin: 0 auto;
+    background: red; 
+    border-radius: $border-radius;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: 0 1.5px 7.5px 1.5px rgba(0,0,0,.25);
+    transition: .75s;
+
+    @media(max-width: $breakpointA) {
+        width: $breakpointC;
+    }
+    @media(max-width: $breakpointB) {
+        width: $breakpointD;
+    }
+    @media(max-width: $breakpointD) {
+        width: 100vw;
+    }
+    @media(max-height: $breakpointD) {
+        height: 100vh; 
+    }
+    @media(max-height: $breakpointD) and (max-width: $breakpointC) { 
+        
+        border-radius: 0;
+    }
+
+    .inner-content {
+        box-sizing: border-box;
+        display: flex; 
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 0 20px;
+    }
+
+    .content-header {
+        @extend .inner-content;
+
+        width: 100%;
+        min-height: 50px; 
+        background-color: $orange;
+        border-radius: $border-radius $border-radius 0 0;
+
+        @media(max-height: $breakpointD) and (max-width: $breakpointC) { 
+            border-radius: 0;
+        }
+
+        .header-title {
+            @extend .vertical-align;
+            font-family: $fontA;
+            font-weight: 600;
+            letter-spacing: 1px;
+            font-size: 20px;
+            color: $white;
+            cursor: default;
+        }
+
+        .resize-container {
+            @extend .vertical-align;
+
+            width: 50px;
+            height: 50px;
+            // background-color: red; 
+            
+            .resize-button {
+                border-radius: 100px;
+                padding: 5px;
+                width: 25px;
+                height: 25px;
+                background-image: url('./resize.png');
+                background-size: 25px;
+                background-repeat: no-repeat;
+                background-position: center;
+                margin: 0 0 0 auto;
+                cursor: pointer;
+                
+                &:hover {
+                    background-color: lighten($orange, 10%);
+                }
+            }
+
+        }
+    }
+
+    .content-body {
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: $white;
+        box-sizing: border-box;
+        padding: 20px;
+        cursor: text;
+        color: $black;
+        font-family: $fontB;
+
+
+
+        &:focus {
+            outline: none;
+        }
+    }
+
+    .content-footer {
+        @extend .inner-content;
+
+        width: 100%;
+        min-height: 100px; 
+        background-color: $orange;
+        border-radius: 0 0 $border-radius $border-radius;
+
+
+        @media(max-height: $breakpointD) and (max-width: $breakpointC) { 
+            border-radius: 0;
+        }
+
+        .word-count {
+            @extend .vertical-align; 
+
+            font-family: $fontA;
+            color: $white;
+            font-weight: 600;
+            cursor: default;
+        }
+
+        .button-container {
+
+        }
+    }
+}
+
+.content-container-full {
+    min-width: 100vw;
+    min-height: 100vh;
+    border-radius: 0;
+}
+.inner-content-full {
+    border-radius: 0; 
+}
