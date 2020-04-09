@@ -18,7 +18,8 @@ export class ContentComponent implements OnInit {
 
   setContent () {
     this.content = this.contentContainerBody.nativeElement.textContent;
-    this.wordcount = this.content.split(' ').length; 
+    let splitContent = this.content.trim().split(/\s+/);
+    splitContent[0] === "" ? null : this.wordcount = splitContent.length;
   }
 
   checkContent () {
