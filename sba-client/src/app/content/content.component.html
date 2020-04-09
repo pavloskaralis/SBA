@@ -1,15 +1,21 @@
-<div class="content-container">
-    <div class="content-header">
+<div class="content-container content-container-shrink" [class.preload]="preload" [class]="fullScreen ? 'content-container-grow' : 'content-container-shrink'">
+    <div class="content-header" [id]="fullScreen ? 'inner-content-full': ''">
         <div class="header-title">SBA Spell Checker</div>
         <div class="resize-container">
-            <div class="resize-button"></div>
+            <div class="resize-button" (click)="resize()"></div>
         </div>
     </div>
     <div class="content-body" contenteditable="true" spellcheck="false"></div>
-    <div class="content-footer">
+    <div class="content-footer" [id]="fullScreen ? 'inner-content-full': ''">
         <div class="word-count">Word Count:</div>
         <div class="button-container">
-            
+            <div class="button-wrap">
+                <app-button [buttonType]="'check'"></app-button>
+            </div>
+            <div class="button-wrap">
+                <app-button [buttonType]="'erase'"></app-button>
+            </div>
         </div>
     </div>
 </div>
+

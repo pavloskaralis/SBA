@@ -1,1 +1,17 @@
-<p>button works!</p>
+
+<ng-container *ngTemplateOutlet="buttonType['check'] ? check : erase">
+</ng-container>
+
+<ng-template #check>
+    <div class="button" [class]="buttonType">
+        {{ buttonType }}
+    </div>
+</ng-template>
+    
+<ng-template #erase>
+    <div class="button" [class]="buttonType">
+        {{ buttonType }}
+    </div>
+</ng-template>
+
+    

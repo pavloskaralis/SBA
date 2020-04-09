@@ -1,0 +1,28 @@
+@import '../../styles.scss';
+
+.button {
+    width: 100px;
+    height: 40px;
+    background-color: $black;
+    border-radius: 10px;
+    font-family: $fontA;
+    font-weight: 600;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    text-transform: capitalize;
+    cursor: pointer;
+
+    &:hover {
+        background-color: lighten($black, 5%);
+    }
+}
+
+.check {
+    color: $yellow;
+}
+
+.erase {
+    color: $red; 
+} 
