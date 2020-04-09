@@ -9,13 +9,16 @@ import { DictionaryService } from '../dictionary.service';
 export class ContentComponent implements OnInit {
   response: any; 
   content;
+  wordcount = 0; 
   preload = true; 
   fullScreen = false; 
+
 
   @ViewChild("contentContainerBody") contentContainerBody: ElementRef;
 
   setContent () {
     this.content = this.contentContainerBody.nativeElement.textContent;
+    this.wordcount = this.content.split(' ').length; 
   }
 
   checkContent () {

@@ -7,7 +7,7 @@
     </div>
     <div #contentContainerBody autoFocus class="content-body" (input)="setContent()" contenteditable="true" spellcheck="false"></div>
     <div class="content-footer" [id]="fullScreen ? 'inner-content-full': ''">
-        <div class="word-count">Word Count:</div>
+        <div class="word-count">Word Count: {{ wordcount }}</div>
         <div class="button-container">
             <div class="button-wrap">
                 <app-button [buttonType]="'check'" (click)="checkContent()"></app-button>

@@ -40,6 +40,11 @@
         flex-direction: row;
         justify-content: space-between;
         padding: 0 20px;
+        transition: .75s; 
+
+        @media(max-height: $breakpointD) and (max-width: $breakpointD) { 
+            transition: 0s;
+        }
     }
 
     .content-header {
@@ -51,7 +56,6 @@
         border-radius: $border-radius $border-radius 0 0;
 
         @media(max-height: $breakpointD) and (max-width: $breakpointD) { 
-            transition: 0s;
             border-radius: 0;
         }
 
@@ -156,6 +160,10 @@
     animation-timing-function: ease-out;
     animation-fill-mode: forwards;
     animation-duration: 1.25s; 
+    transition: .75s; 
+    @media(max-height: $breakpointD) and (max-width: $breakpointD) { 
+        transition: 0s;
+    }
 }
 
 .content-container-grow {
