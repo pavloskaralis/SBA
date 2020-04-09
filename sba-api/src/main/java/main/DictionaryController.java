@@ -26,11 +26,12 @@ public class DictionaryController {
     @Autowired
     DictionaryRepository dictionaryRepository;
 
-    @GetMapping("/")
+    @PutMapping("/")
     public String index(@RequestBody Map<String, String> body) throws InterruptedException, ExecutionException, TimeoutException, JsonProcessingException {
         //later converted to JSON as final return
         Response results = new Response();
 
+        System.out.print(body);
         //retrieve spell checker content and create array of words
         String content = body.get("content");
         WordArray words = new WordArray(content);

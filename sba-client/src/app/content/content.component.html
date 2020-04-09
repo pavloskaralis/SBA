@@ -5,15 +5,15 @@
             <div class="resize-button" (click)="resize()"></div>
         </div>
     </div>
-    <div class="content-body" contenteditable="true" spellcheck="false"></div>
+    <div #contentContainerBody autoFocus class="content-body" (input)="setContent()" contenteditable="true" spellcheck="false"></div>
     <div class="content-footer" [id]="fullScreen ? 'inner-content-full': ''">
         <div class="word-count">Word Count:</div>
         <div class="button-container">
             <div class="button-wrap">
-                <app-button [buttonType]="'check'"></app-button>
+                <app-button [buttonType]="'check'" (click)="checkContent()"></app-button>
             </div>
             <div class="button-wrap">
-                <app-button [buttonType]="'erase'"></app-button>
+                <app-button [buttonType]="'erase'" (click)="eraseContent()" ></app-button>
             </div>
         </div>
     </div>

@@ -11,9 +11,9 @@ $fontA: 'Verdana';
 $fontB: 'Courier';
 
 $orange: rgb(245, 115, 100);
-$yellow: rgb(250,225,100);
+$yellow: rgb(235, 210, 85);
 $pink: rgb(220,145,165);
-$red: rgb(230, 70, 75);
+$red: rgb(235, 80, 85);
 $white: rgb(250,250,250);
 $black: rgb(50,50,50);
 
@@ -45,9 +45,9 @@ $black: rgb(50,50,50);
 }
 
 ::selection {
-    background: lighten($pink, 12%); 
+    background: lighten($pink, 12.5%); 
 }
 
 ::-moz-selection {
-    background: lighten($pink, 12%); 
+    background: lighten($pink, 12.5%); 
 }

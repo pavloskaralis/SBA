@@ -104,8 +104,9 @@
         height: 100%;
         overflow: auto;
         background-color: $white;
+        line-height: 20px;
         box-sizing: border-box;
-        padding: 20px;
+        padding: 16px 20px;
         cursor: text;
         color: $black;
         font-family: $fontB;
@@ -154,11 +155,7 @@
     animation: shrink; 
     animation-timing-function: ease-out;
     animation-fill-mode: forwards;
-    animation-duration: 1s; 
-    transition: .75s;
-    @media(max-height: $breakpointD) and (max-width: $breakpointD) { 
-        transition: 0s;
-    }
+    animation-duration: 1.25s; 
 }
 
 .content-container-grow {
@@ -167,7 +164,7 @@
     animation-fill-mode: forwards;
     animation-duration: .75s; 
     border-radius: 0;
-    @media(max-width: $breakpointD) { 
+    @media(max-width: $breakpointD), (max-height: $breakpointD) { 
         transition: 0s;
     }
 }

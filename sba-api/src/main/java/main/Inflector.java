@@ -588,7 +588,8 @@ public class Inflector {
         //self added
         inflect.addIrregular("this", "this");
         inflect.addIrregular("is", "is");
-        inflect.addIrregular("Does", "does");
+        inflect.addIrregular("does", "does");
+        inflect.addIrregular("to", "to");
 
         inflect.addUncountable("equipment", "information", "rice", "money", "species", "series", "fish", "sheep");
     }
