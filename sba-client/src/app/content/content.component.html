@@ -6,7 +6,7 @@
         </div>
     </div>
     <div #contentContainerBody autoFocus class="content-body" (input)="setContent()" contenteditable="true" spellcheck="false">
-        This is a <suggestion [misspelling]="'test'"></suggestion> to check the dropdown.
+        This is a <suggestion #suggestion [misspelling]="'test'"></suggestion> to check the dropdown.
     </div>
     <div class="content-footer" [class.inner-content-full]="fullScreen">
         <div class="word-count">Word Count: {{ wordcount }}</div>

@@ -18,7 +18,8 @@ export class ContentComponent implements OnInit {
 
   setContent () {
     this.content = this.contentContainerBody.nativeElement.textContent;
-    let splitContent = this.content.trim().split(/\s+/);
+    let splitContent = this.content.trim().replace(/Suggestion\w+(Ignore|Submit)/,'').split(/\s+/);
+    console.log(splitContent)
     splitContent[0] === "" ? this.wordcount = 0 : this.wordcount = splitContent.length;
   }
 
