@@ -2,7 +2,7 @@
         <span class="misspelling" (click)="toggleDropdown()">
                 {{ misspelling }}
         </span> 
-        <div [class.dropdown-closed]="!dropdown" class="dropdown-container" contenteditable="false">
+        <div [class.dropdown-closed]="!dropdown" class="dropdown-container" contenteditable="false" [class.dropdown-overflow]="overflow">
             <div class="dropdown-fill"></div>
             <div class="dropdown-body">
                 <div class="dropdown-title">Suggestions</div>

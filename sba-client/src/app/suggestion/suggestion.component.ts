@@ -10,10 +10,13 @@ import { Component, OnInit, Input, ElementRef } from '@angular/core';
 })
 export class SuggestionComponent implements OnInit {
   @Input() misspelling: string;
+  overflow = false;
   dropdown = false;
+ 
 
   toggleDropdown() {
     this.dropdown = !this.dropdown;
+    this.checkOverflow();
   }
 
   dropdownOffClick(event) {
@@ -23,10 +26,17 @@ export class SuggestionComponent implements OnInit {
    
   }
 
+  checkOverflow () { 
+    let content = document.querySelector('.dropdown-container');
+    setTimeout(() => {
+      let checkOverflow = parseFloat(window.getComputedStyle(content).right); 
+      checkOverflow < 0 ? this.overflow = true : this.overflow = false;   
+    }, 0); 
+  } 
+
   constructor(private suggestion: ElementRef) { }
 
   ngOnInit(): void {
-    console.log(this.dropdown)
   }
 
 }

@@ -9,18 +9,21 @@ import { DictionaryService } from '../dictionary.service';
 export class ContentComponent implements OnInit {
   response: any; 
   content;
+  innerHTML;
+  splitContent;
   wordcount = 0; 
   preload = true; 
   fullScreen = false; 
+  word = "test";
 
 
   @ViewChild("contentContainerBody") contentContainerBody: ElementRef;
 
   setContent () {
     this.content = this.contentContainerBody.nativeElement.textContent;
-    let splitContent = this.content.trim().replace(/Suggestion\w+(Ignore|Submit)/,'').split(/\s+/);
-    console.log(splitContent)
-    splitContent[0] === "" ? this.wordcount = 0 : this.wordcount = splitContent.length;
+    this.splitContent = this.content.trim().replace(/Suggestion\w+(Ignore|Submit)/,'').split(/\s+/);
+    console.log(this.splitContent)
+    this.splitContent[0] === "" ? this.wordcount = 0 : this.wordcount = this.splitContent.length;
   }
 
   checkContent () {
@@ -44,7 +47,7 @@ export class ContentComponent implements OnInit {
 
   eraseContent () {
     this.contentContainerBody.nativeElement.textContent = null;
-    this.content = null; 
+    this.content = null;  
     this.wordcount = 0;
   }
 
