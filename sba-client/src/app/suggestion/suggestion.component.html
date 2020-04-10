@@ -1,0 +1,14 @@
+<span class="suggestion-container">
+        <span class="misspelling" (click)="toggleDropdown()">
+                {{ misspelling }}
+        </span> 
+        <div [class.dropdown-closed]="!dropdown" class="dropdown-container" contenteditable="false">
+            <div class="dropdown-fill"></div>
+            <div class="dropdown-body">
+                <div class="dropdown-title">Suggestions</div>
+                <div class="dropdown-suggestion">test</div>
+                <input autoFocus placeholder="Other (Enter Text)" class="dropdown-other"/>
+                <div class="dropdown-ignore">Ignore</div>
+            </div>
+        </div>
+</span>

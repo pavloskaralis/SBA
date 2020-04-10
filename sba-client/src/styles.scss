@@ -10,12 +10,14 @@ $breakpointD: 576px;
 $fontA: 'Verdana';
 $fontB: 'Courier';
 
+$boxShadow:  0 1.5px 7.5px 1.5px rgba(0,0,0,.25);
+
 $orange: rgb(245, 115, 100);
-$yellow: rgb(235, 210, 85);
-$pink: rgb(220,145,165);
+$yellow: rgb(240, 220, 95);
+$pink: rgb(235, 140, 155);
 $red: rgb(235, 80, 85);
 $white: rgb(250,250,250);
-$black: rgb(50,50,50);
+$black: rgb(55,55,55);
 
 .vertical-align {
     display: flex; 
@@ -27,6 +29,7 @@ $black: rgb(50,50,50);
     width: 14px;
     height: 18px;
 }
+
 ::-webkit-scrollbar-thumb {
     height: 6px;
     border: 4px solid rgba(0, 0, 0, 0);
@@ -35,11 +38,13 @@ $black: rgb(50,50,50);
     background-color: $orange;
     -webkit-box-shadow: inset -1px -1px 0px rgba(0, 0, 0, 0.05), inset 1px 1px 0px rgba(0, 0, 0, 0.05);
 }
+
 ::-webkit-scrollbar-button {
     width: 0;
     height: 0;
     display: none;
 }
+
 ::-webkit-scrollbar-corner {
     background-color: transparent;
 }
@@ -50,4 +55,8 @@ $black: rgb(50,50,50);
 
 ::-moz-selection {
     background: lighten($pink, 12.5%); 
+}
+
+::placeholder {
+    color: darken($white, 40%);
 }

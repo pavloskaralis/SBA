@@ -1,12 +1,14 @@
 <div class="content-container content-container-shrink" [class.preload]="preload" [class]="fullScreen ? 'content-container-grow' : 'content-container-shrink'">
-    <div class="content-header" [id]="fullScreen ? 'inner-content-full': ''">
+    <div class="content-header" [class.inner-content-full]="fullScreen">
         <div class="header-title">SBA Spell Checker</div>
         <div class="resize-container">
             <div class="resize-button" (click)="resize()"></div>
         </div>
     </div>
-    <div #contentContainerBody autoFocus class="content-body" (input)="setContent()" contenteditable="true" spellcheck="false"></div>
-    <div class="content-footer" [id]="fullScreen ? 'inner-content-full': ''">
+    <div #contentContainerBody autoFocus class="content-body" (input)="setContent()" contenteditable="true" spellcheck="false">
+        This is a <suggestion [misspelling]="'test'"></suggestion> to check the dropdown.
+    </div>
+    <div class="content-footer" [class.inner-content-full]="fullScreen">
         <div class="word-count">Word Count: {{ wordcount }}</div>
         <div class="button-container">
             <div class="button-wrap">

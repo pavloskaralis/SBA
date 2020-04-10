@@ -19,7 +19,7 @@ export class ContentComponent implements OnInit {
   setContent () {
     this.content = this.contentContainerBody.nativeElement.textContent;
     let splitContent = this.content.trim().split(/\s+/);
-    splitContent[0] === "" ? null : this.wordcount = splitContent.length;
+    splitContent[0] === "" ? this.wordcount = 0 : this.wordcount = splitContent.length;
   }
 
   checkContent () {
@@ -44,6 +44,7 @@ export class ContentComponent implements OnInit {
   eraseContent () {
     this.contentContainerBody.nativeElement.textContent = null;
     this.content = null; 
+    this.wordcount = 0;
   }
 
   resize() {
