@@ -590,6 +590,7 @@ public class Inflector {
         inflect.addIrregular("is", "is");
         inflect.addIrregular("does", "does");
         inflect.addIrregular("to", "to");
+        inflect.addIrregular("was", "was");
 
         inflect.addUncountable("equipment", "information", "rice", "money", "species", "series", "fish", "sheep");
     }

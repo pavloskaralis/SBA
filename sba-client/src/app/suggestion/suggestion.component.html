@@ -1,12 +1,12 @@
 <span class="suggestion-container">
-        <span class="misspelling" (click)="toggleDropdown()">
+        <span class="misspelling" (click)="toggleDropdown()"  contenteditable="true"  >
                 {{ misspelling }}
         </span> 
-        <div [class.dropdown-closed]="!dropdown" class="dropdown-container" contenteditable="false" [class.dropdown-overflow]="overflow">
+        <div [id]="id" [class.dropdown-active]="dropdown" class="dropdown-container" contenteditable="false" [class.dropdown-right-overflow]="overflowRight" [class.dropdown-bottom-overflow]="overflowBottom">
             <div class="dropdown-fill"></div>
             <div class="dropdown-body">
-                <div class="dropdown-title">Suggestions</div>
-                <div class="dropdown-suggestion">test</div>
+                <div class="dropdown-title">{{ title }}</div>
+                <div class="dropdown-suggestion" *ngFor="let suggestion of suggestions"> {{suggestion}} </div>
                 <input autoFocus placeholder="Other (Enter Text)" class="dropdown-other"/>
                 <div class="dropdown-ignore">Ignore</div>
             </div>

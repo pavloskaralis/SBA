@@ -8,14 +8,13 @@
         .misspelling{
             background-color: $yellow;
             padding: 0 2px;
-            margin: 0 1px; 
             cursor: pointer;
             z-index: 1;
             height: 24px; 
         }
 
-        .dropdown-closed {
-            display: none !important;
+        .dropdown-active {
+            display: flex !important;
         }
 
         .dropdown-row {
@@ -38,14 +37,17 @@
             }
         }
   
-        .dropdown-overflow {
+        .dropdown-right-overflow {
             right: 0 !important;
+        }
+        .dropdown-bottom-overflow {
+            bottom: 0 !important;
+            z-index: 2;
         }
         
         .dropdown-container {
             position: absolute;
-            margin: 0 1px;
-            display: flex;
+            display: none;
             flex-direction: column;
     
             .dropdown-fill {
@@ -98,3 +100,4 @@
         }
 
 }
+

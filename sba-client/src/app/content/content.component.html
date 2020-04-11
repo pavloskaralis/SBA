@@ -1,12 +1,20 @@
-<div id="content-container" class="content-container content-container-shrink" [class.preload]="preload" [class]="fullScreen ? 'content-container-grow' : 'content-container-shrink'">
+<div class="content-container content-container-shrink" [class.preload]="preload" [class]="fullScreen ? 'content-container-grow' : 'content-container-shrink'">
     <div class="content-header" [class.inner-content-full]="fullScreen">
         <div class="header-title">SBA Spell Checker</div>
         <div class="resize-container">
             <div class="resize-button" (click)="resize()"></div>
         </div>
     </div>
-    <div #contentContainerBody autoFocus class="content-body" (input)="setContent()" contenteditable="true" spellcheck="false">
-        As a test let's place this word at the very <suggestion #suggestion [misspelling]="'edge'"></suggestion> .
+    <div class="content-body-container">
+        <div #contentBodyContainer autoFocus class="content-body" [class.content-body-hide]="hide" (input)="setContent()" contenteditable spellcheck="false">
+          
+        </div>
+        <div autoFocus class="content-body-render" [class.content-body-hide]="!hide"  contenteditable spellcheck="false">
+            <ng-container *ngFor="let result of response; let index = index;">
+                <ng-container *ngIf="!result.misspelled">{{ result.word }}</ng-container>
+                <suggestion *ngIf="result.misspelled" [misspelling]="result.word" [suggestions]="result.suggestions"></suggestion>
+            </ng-container>
+        </div>
     </div>
     <div class="content-footer" [class.inner-content-full]="fullScreen">
         <div class="word-count">Word Count: {{ wordcount }}</div>

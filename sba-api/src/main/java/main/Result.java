@@ -11,11 +11,14 @@ public class Result {
     private String word;
     private ArrayList<String> suggestions;
 
+    private Boolean misspelled;
+
     public Result() {}
 
-    public Result(String word, ArrayList<String> suggestions) {
+    public Result(String word, ArrayList<String> suggestions, Boolean misspelled) {
         this.setWord(word);
         this.setSuggestions(suggestions);
+        this.setMisspelled(misspelled);
     }
 
     public String getWord() {
@@ -32,6 +35,14 @@ public class Result {
 
     public void setSuggestions(ArrayList<String> suggestions) {
         this.suggestions = suggestions;
+    }
+
+    public Boolean getMisspelled() {
+        return misspelled;
+    }
+
+    public void setMisspelled(Boolean misspelled) {
+        this.misspelled = misspelled;
     }
 //
 

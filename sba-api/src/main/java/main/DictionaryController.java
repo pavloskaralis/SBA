@@ -31,7 +31,6 @@ public class DictionaryController {
         //later converted to JSON as final return
         Response results = new Response();
 
-        System.out.print(body);
         //retrieve spell checker content and create array of words
         String content = body.get("content");
         WordArray words = new WordArray(content);
@@ -46,7 +45,7 @@ public class DictionaryController {
             //if a match is found create a result with no suggestions
             if(entry != null) {
                 ArrayList<String> empty = new ArrayList<String>();
-                Result result = new Result(currentWord,empty);
+                Result result = new Result(currentWord,empty,false);
                 //add the result to the response object
                 results.addResult(result);
                 //otherwise if no match is found
@@ -81,22 +80,17 @@ public class DictionaryController {
 
                         topSuggestions.add(suggestion);
 
-                        if(i == 5) { break; }
+                        if(i == 4) { break; }
                     }
-                    //if suggestions were found but with a distance greater than 4, specify none found
-                    if(suggestions.size() == 0) {
-                        topSuggestions.add("No Suggestions Found");
-                    }
-                    //and create a result with the extracted suggestions
-                    Result result = new Result(currentWord,topSuggestions);
+                    //create a result with the extracted suggestions
+                    Result result = new Result(currentWord,topSuggestions,true);
                     //add the result to the response object
                     results.addResult(result);
                 //if no suggestions are found for the misspelled word
                 } else {
                     //create a result with a suggestions property, but specifying none found
-                    ArrayList<String> noSuggestionsFound = new ArrayList<String>(1);
-                    noSuggestionsFound.add("No Suggestions Found");
-                    Result result = new Result(currentWord,noSuggestionsFound);
+                    ArrayList<String> empty = new ArrayList<String>();
+                    Result result = new Result(currentWord,empty,true);
                     //add the result to the response object
                     results.addResult(result);
                 }
