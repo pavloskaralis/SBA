@@ -5,12 +5,24 @@
     flex-direction: column;
     // background: red; 
     
+        .correct-spelling {
+            display: inline-block;
+            height: 24px; 
+            min-height: 24px;
+        }
+
         .misspelling{
             background-color: $yellow;
-            padding: 0 2px;
+            display: inline-block;
+            // padding: 0 2px;
             cursor: pointer;
             z-index: 1;
             height: 24px; 
+
+
+            &:focus {
+                outline: none;
+            }
         }
 
         .dropdown-active {

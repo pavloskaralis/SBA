@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, ViewChildren, QueryList } from '@angular/core';
 import { DictionaryService } from '../dictionary.service';
+import { last } from 'rxjs/operators';
 
 @Component({
   selector: 'content',
@@ -8,7 +9,6 @@ import { DictionaryService } from '../dictionary.service';
 })
 export class ContentComponent implements OnInit {
   preload = true; 
-  hide = false; 
   fullScreen = false; 
 
   content;
@@ -33,8 +33,7 @@ export class ContentComponent implements OnInit {
 
   setContent () {
     this.content = this.contentBodyContainer.nativeElement.textContent.trim();
-    //.replace(/Suggestion\w+(Ignore|Submit)/,'')
-    this.splitContent = this.content.split(/\s+/);
+    this.splitContent = this.content.replace(/(Suggestion|No)\w+(Ignore|Submit)/,'').split(/\s+/);
     // console.log(this.splitContent);
     this.setWordCount();
     // this.checkSpanChange();
@@ -52,13 +51,21 @@ export class ContentComponent implements OnInit {
       let result = response[i];
       let original = this.splitContent[i];
       let lastIndex = original.split("").length - 1;
-      let lastChar = original.split("")[lastIndex] + " ";
+      let lastChar = original.split("")[lastIndex];
       if(result.word === this.splitContent[i]){
-        result.word += " ";
+        // result.word += " ";
         configuredResponse.push(result);
+        configuredResponse.push(createResult(""));
       } else {
-        configuredResponse.push(result);
-        configuredResponse.push(createResult(lastChar));
+        if(lastChar === "s") {
+          result.word += lastChar;
+          configuredResponse.push(result);
+          configuredResponse.push(createResult(""));
+        } else {
+          configuredResponse.push(result);
+          configuredResponse.push(createResult(lastChar));
+          configuredResponse.push(createResult(""));
+        }
       }
     }
     return configuredResponse;
@@ -67,14 +74,14 @@ export class ContentComponent implements OnInit {
   checkContent () {
     //configure to empty stay
     if(!this.content) return; 
-
+    console.log(this.content);
     let request = {content: this.content}
     this.dictionary.checkContent(request)
       .subscribe( response => {
+          console.log(response)
           let configuredResponse = this.configureResponse(response["results"]);
           this.response = configuredResponse;
-          if(!this.hide) this.hide = true;
-
+          console.log(configuredResponse)
           // console.log(this.response);
           // this.misspellings = this.response.filter(result => result["suggestions"].length > 0);
           // let hiddenRendser = document.query
@@ -137,6 +144,7 @@ export class ContentComponent implements OnInit {
 
   //required to avoid initial animation for resize button transition 
   ngOnInit(): void {
+    this.response = [{word: "", suggestion: [], misspelled: false}];
     setTimeout(
       ()=> this.preload = false,
       500
@@ -147,15 +155,6 @@ export class ContentComponent implements OnInit {
     alert("test")
   }
 
-  ngAfterViewChecked (){
-    let suggesstionNodes = document.querySelectorAll(".suggestion-container");
-    for(let i = 0; i < suggesstionNodes.length; i ++) {
-      suggesstionNodes[i].addEventListener('click', () => {
-        let dropdown = suggesstionNodes[i]
-        // console.log(dropdown)
-      });
-    }
-    // console.log(this.suggestions)
-  } 
+
 
 }

@@ -1,14 +1,26 @@
-<span class="suggestion-container">
-        <span class="misspelling" (click)="toggleDropdown()"  contenteditable="true"  >
-                {{ misspelling }}
-        </span> 
+<ng-container *ngTemplateOutlet="result.misspelled? misspelled : correct"></ng-container>
+
+<ng-template #misspelled>
+    <span class="suggestion-container">
+        <div class="misspelling" (click)="toggleDropdown()">
+                {{ result.word }}
+        </div> 
         <div [id]="id" [class.dropdown-active]="dropdown" class="dropdown-container" contenteditable="false" [class.dropdown-right-overflow]="overflowRight" [class.dropdown-bottom-overflow]="overflowBottom">
             <div class="dropdown-fill"></div>
             <div class="dropdown-body">
                 <div class="dropdown-title">{{ title }}</div>
-                <div class="dropdown-suggestion" *ngFor="let suggestion of suggestions"> {{suggestion}} </div>
+                <div class="dropdown-suggestion" *ngFor="let suggestion of result.suggestions"> {{suggestion}} </div>
                 <input autoFocus placeholder="Other (Enter Text)" class="dropdown-other"/>
                 <div class="dropdown-ignore">Ignore</div>
             </div>
         </div>
-</span>
+    </span>       
+</ng-template>
+
+<ng-template #correct>
+    <span class="suggestion-container">
+        <div class="correct-spelling" ng-bind-html="&nbsp;">
+            {{ result.word ? result.word : "&nbsp;" }}
+        </div> 
+    </span>
+</ng-template>

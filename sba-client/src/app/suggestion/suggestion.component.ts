@@ -11,8 +11,7 @@ import { StringifyOptions } from 'querystring';
   styleUrls: ['./suggestion.component.scss']
 })
 export class SuggestionComponent implements OnInit {
-  @Input() misspelling: string;
-  @Input() suggestions: any; 
+  @Input() result: any; 
   @Input() id: string;
 
   title = "Suggestions"; 
@@ -21,7 +20,7 @@ export class SuggestionComponent implements OnInit {
   dropdown = false;
 
   setTittle(){
-    if(this.suggestions.length < 1) this.title = "No Suggestions Found";
+    if(!this.result.suggestions) this.title = "No Suggestions Found";
   }
 
   toggleDropdown() {
@@ -40,7 +39,7 @@ export class SuggestionComponent implements OnInit {
   checkOverflow () { 
     let content = document.getElementById(this.id);
     setTimeout(() => {
-      console.log(window.getComputedStyle(content))
+      // console.log(window.getComputedStyle(content))
       let overflowRight = parseFloat(window.getComputedStyle(content).right); 
       let overflowBottom = parseFloat(window.getComputedStyle(content).bottom); 
       setTimeout(()=> { 

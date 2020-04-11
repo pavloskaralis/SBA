@@ -6,13 +6,9 @@
         </div>
     </div>
     <div class="content-body-container">
-        <div #contentBodyContainer autoFocus class="content-body" [class.content-body-hide]="hide" (input)="setContent()" contenteditable spellcheck="false">
-          
-        </div>
-        <div autoFocus class="content-body-render" [class.content-body-hide]="!hide"  contenteditable spellcheck="false">
+        <div #contentBodyContainer autoFocus class="content-body" (input)="setContent()" contenteditable spellcheck="false">
             <ng-container *ngFor="let result of response; let index = index;">
-                <ng-container *ngIf="!result.misspelled">{{ result.word }}</ng-container>
-                <suggestion *ngIf="result.misspelled" [misspelling]="result.word" [suggestions]="result.suggestions"></suggestion>
+                <suggestion [result]="result"> </suggestion>
             </ng-container>
         </div>
     </div>
