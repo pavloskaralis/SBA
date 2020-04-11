@@ -19,7 +19,6 @@ export class ContentComponent implements OnInit {
   misspellings: any; 
 
  
-  innerHTML = "";
   
   
  
@@ -32,95 +31,92 @@ export class ContentComponent implements OnInit {
   }
 
   setContent () {
-    this.content = this.contentBodyContainer.nativeElement.textContent.trim();
-    this.splitContent = this.content.replace(/(Suggestion|No)\w+(Ignore|Submit)/,'').split(/\s+/);
-    // console.log(this.splitContent);
+    // console.log("Raw:",this.content)
+    // console.log("Live:",this.contentBodyContainer.nativeElement.textContent)
+    this.content = this.contentBodyContainer.nativeElement.textContent.replace(/No\sSuggestions\sFoundIgnore/g,"").replace(/Suggestions\s\w+\sIgnore/g,"").replace(/\s{3,}/g," ").replace(/\s{2}/g,"").trim();
+    // console.log("Set:",this.content)
+    this.splitContent = this.content.split(/\s+/);
     this.setWordCount();
-    // this.checkSpanChange();
+    this.checkSpanChange();
   }
 
   setWordCount() {
     this.splitContent[0] === "" ? this.wordcount = 0 : this.wordcount = this.splitContent.length;
   }
   
+  checkContent () {
+    //configure to empty stay
+    if(!this.content) return; 
+    let request = {content: this.content}
+    console.log("request",this.content)
+    this.dictionary.checkContent(request)
+      .subscribe( response => {
+          let misspellings = [];
+          for(let i = 0; i < response["results"].length; i ++){
+            if(response["results"][i].misspelled)misspellings.push(response["results"][i].word);
+          }
+          this.misspellings = misspellings;
+          console.log("raw response", this.response)
+
+          let configuredResponse = this.configureResponse(response["results"]);
+          this.response = configuredResponse;
+          this.setContent();
+          console.log("response", this.response)
+          // console.log(this.misspellings,this.response,this.splitContent)
+
+          // this.misspellings = this.response.filter(result => result["suggestions"].length > 0);
+          // let hiddenRendser = document.query
+          // this.setInnerHTML();
+      }, (error: Response) => {
+        if(error.status === 404) {
+        } else if (error.status === 400) {
+        } else {
+        }
+      })
+  }
+
   configureResponse(response) {
     //readd punctuation and spaces
     let configuredResponse = [];
     let createResult = word => {return {word: word, suggestions: [], misspelled: false}};
     for(let i = 0; i < response.length; i++) {
+      let lastLoop = response.length - 1;
       let result = response[i];
-      let original = this.splitContent[i];
-      let lastIndex = original.split("").length - 1;
-      let lastChar = original.split("")[lastIndex];
-      if(result.word === this.splitContent[i]){
-        // result.word += " ";
+      let request = this.splitContent[i];
+      let lastIndex = request.split("").length - 1;
+      let lastChar = request.split("")[lastIndex];
+      let exceptLast = request.slice(0,request.length -1);
+      //if result word exactly matches request word directly add it
+      if(result.word === request){
         configuredResponse.push(result);
-        configuredResponse.push(createResult(""));
+        if(i !== lastLoop) configuredResponse.push(createResult(""));
+        //otherwise
       } else {
-        if(lastChar === "s") {
-          result.word += lastChar;
-          configuredResponse.push(result);
-          configuredResponse.push(createResult(""));
+        //if all but the last characters match
+        if(result.word.slice(0,request.length -1) === exceptLast) {
+          //and the last character is s (plural)
+          if(lastChar === "s") {
+            //add s back
+            result.word += lastChar;
+            configuredResponse.push(result);
+            //and the last character is punctuation
+          } else if (lastChar !== RegExp(/\w/)) {
+            configuredResponse.push(result);
+            //add punctuation
+            configuredResponse.push(createResult(lastChar));
+          }
+          //otherwise replace result with request
         } else {
+          result.word = request;
           configuredResponse.push(result);
-          configuredResponse.push(createResult(lastChar));
-          configuredResponse.push(createResult(""));
         }
+        //add space if not the end of content
+        if(i !== lastLoop) configuredResponse.push(createResult(""));
       }
     }
     return configuredResponse;
   }
 
-  checkContent () {
-    //configure to empty stay
-    if(!this.content) return; 
-    console.log(this.content);
-    let request = {content: this.content}
-    this.dictionary.checkContent(request)
-      .subscribe( response => {
-          console.log(response)
-          let configuredResponse = this.configureResponse(response["results"]);
-          this.response = configuredResponse;
-          console.log(configuredResponse)
-          // console.log(this.response);
-          // this.misspellings = this.response.filter(result => result["suggestions"].length > 0);
-          // let hiddenRendser = document.query
-          // this.setInnerHTML();
-          // console.log(this.misspellings)
-      }, (error: Response) => {
-        console.log(error)
-        if(error.status === 404) {
-          console.log(error)
-        } else if (error.status === 400) {
-          console.log(error)
-        } else {
-          console.log(error);
-        }
-      })
-  }
-
-  setInnerHTML () {
-    let hiddenRenders = document.querySelector(".hidden-renders");
-    setTimeout( ()=> {
-      // console.log(hiddenRenders);
-      let children = hiddenRenders.children; 
-      let childrenInnerHTML = [];
-      let childrenContent = [];
-      for(let i = 0; i < children.length; i ++) {
-        childrenInnerHTML.push(children[i].innerHTML);
-        childrenContent.push(children[i].textContent.trim().split(" ")[0]);
-      }
-      let merged = [];
-      for(let i = 0; i < this.splitContent.length; i++) {
-        let matchedIndex = childrenContent.indexOf(this.splitContent[i]); 
-        matchedIndex === -1 ? merged.push(this.splitContent[i]) : merged.push(childrenInnerHTML[matchedIndex]);
-      }
-
-      let newInnerHTML = merged.join(" ");
-      this.innerHTML = newInnerHTML;
-    }, 0);
-    
-  }
 
   eraseContent () {
     // this.contentBodyContainer.nativeElement.textContent = null;
@@ -128,11 +124,18 @@ export class ContentComponent implements OnInit {
     // this.wordcount = 0;
   }
 
-  // checkSpanChange () {
-  //   this.misspellings.forEach( (misspelling, index) => {
-  //     if(this.splitContent.indexOf(misspelling) === -1) return this.changeSpan(misspelling, index); 
-  //   });
-  // }
+  checkSpanChange () {
+    // for(let i = 0; i < this.misspellings.length; i++){
+    //   if(this.splitContent.indexOf(this.misspellings[i]) === -1){
+
+    //     let index = this.response.findIndex(result => result.word === this.misspellings[i]);
+    //     console.log("change made",this.response[index].word,this.misspellings[i]);
+
+    //     this.response[index].misspelled = false;
+    //   }
+    // }
+
+  }
 
   // changeSpan(misspelling, index) {
 
@@ -144,7 +147,8 @@ export class ContentComponent implements OnInit {
 
   //required to avoid initial animation for resize button transition 
   ngOnInit(): void {
-    this.response = [{word: "", suggestion: [], misspelled: false}];
+    this.response = [{word: " ", suggestion: [], misspelled: false}];
+    this.misspellings = [];
     setTimeout(
       ()=> this.preload = false,
       500

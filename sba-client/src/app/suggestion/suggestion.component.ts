@@ -20,7 +20,7 @@ export class SuggestionComponent implements OnInit {
   dropdown = false;
 
   setTittle(){
-    if(!this.result.suggestions) this.title = "No Suggestions Found";
+    if(this.result.suggestions && this.result.suggestions.length < 1) this.title = "No Suggestions Found";
   }
 
   toggleDropdown() {
@@ -35,6 +35,8 @@ export class SuggestionComponent implements OnInit {
     // this.overflowRight=false; 
     // this.overflowBottom=false; 
   }
+
+  
 
   checkOverflow () { 
     let content = document.getElementById(this.id);

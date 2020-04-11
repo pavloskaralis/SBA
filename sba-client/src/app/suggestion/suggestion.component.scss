@@ -3,22 +3,29 @@
 .suggestion-container {
     display: inline-flex;
     flex-direction: column;
+  
+
     // background: red; 
     
-        .correct-spelling {
+        .word {
             display: inline-block;
             height: 24px; 
             min-height: 24px;
+            min-width: 1px;
+            color: $black;
+            font-family: $fontB;
+            white-space: nowrap;
+
+        }
+        .correct-spelling {
+            @extend .word;
         }
 
         .misspelling{
+            @extend .word;
             background-color: $yellow;
-            display: inline-block;
-            // padding: 0 2px;
             cursor: pointer;
             z-index: 1;
-            height: 24px; 
-
 
             &:focus {
                 outline: none;

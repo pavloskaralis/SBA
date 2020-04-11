@@ -1,5 +1,7 @@
 package main;
 
+import java.util.ArrayList;
+
 public class WordArray {
 
     private String[] words;
@@ -23,13 +25,16 @@ public class WordArray {
         Inflector inflector = new Inflector();
         for (int i = 0; i < words.length; i++) {
             //break content down into words
-            words[i] = words[i].replaceAll("[^\\w]", "");
+            if( !words[i].matches("^\\W{1,}") ){
+                words[i] = words[i].replaceAll("[^\\w]", "");
+            }
             //if plural, replace with singular
             String singular = inflector.singularize(words[i]);
             if(singular.toLowerCase() != words[i].toLowerCase()) {
                 words[i] = singular;
             }
         }
+
         this.words = words;
     }
 

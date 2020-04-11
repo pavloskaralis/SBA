@@ -8,7 +8,7 @@
     <div class="content-body-container">
         <div #contentBodyContainer autoFocus class="content-body" (input)="setContent()" contenteditable spellcheck="false">
             <ng-container *ngFor="let result of response; let index = index;">
-                <suggestion [result]="result"> </suggestion>
+                <suggestion #suggestion [result]="result"> </suggestion>
             </ng-container>
         </div>
     </div>
