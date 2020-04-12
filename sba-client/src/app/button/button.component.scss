@@ -15,7 +15,16 @@
     text-align: center;
     text-transform: capitalize;
     cursor: pointer;
-
+    @media(max-width: $breakpointE){
+        font-size: 14px;
+        width: 68px;
+        height: 34px;
+    }
+    @media(max-width: $breakpointF){
+        font-size: 12px;
+        height: 30px; 
+        width: 60px;
+    }
     &:hover {
         background-color: lighten($black, 5%);
     }
