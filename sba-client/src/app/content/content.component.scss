@@ -155,7 +155,7 @@
             color: $white;
             font-weight: 600;
             cursor: default;
-
+            font-size: 15.5px;
             // @media(max-width: $breakpointD) {
             //     text-align: center;
             //     max-width: 120px;
@@ -166,9 +166,8 @@
             display: flex;
             justify-content: space-between;
             height: 100%;
-            width: 220px;
-            min-width: 205px;
-            
+            width: 280px;
+            // transition: .75s;
 
             .button-wrap {
                 @extend .vertical-align;
@@ -226,6 +225,8 @@
 }
 
 
-.hidden-renders {
-
+.disabled {
+    transition: .75s; 
+    opacity: .7;
+    pointer-events: none;
 }

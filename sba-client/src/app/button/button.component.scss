@@ -1,11 +1,13 @@
 @import '../../styles.scss';
 
+
 .button {
-    width: 100px;
+    width: 80px;
     height: 40px;
     background-color: $black;
     border-radius: 10px;
     font-family: $fontA;
+    font-size: 15.5px;
     font-weight: 600;
     display: flex;
     flex-direction: column;
@@ -24,5 +26,10 @@
 }
 
 .copy {
+    color: $pink; 
+} 
+
+.erase {
     color: $red; 
 } 
+

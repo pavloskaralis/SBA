@@ -60,13 +60,13 @@
         }
         .dropdown-bottom-overflow {
             bottom: 0 !important;
-            z-index: 2;
         }
         
         .dropdown-container {
-            position: absolute;
+            position: fixed;
             display: none;
             flex-direction: column;
+            z-index: 2;
     
             .dropdown-fill {
                 @extend .dropdown-row;

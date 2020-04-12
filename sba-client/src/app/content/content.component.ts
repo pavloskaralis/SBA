@@ -9,20 +9,25 @@ import { last } from 'rxjs/operators';
 })
 export class ContentComponent implements OnInit {
   //prevents animations on page load
-  preload = true; 
-  fullScreen = false; 
+  preload: boolean = true; 
+  fullScreen: boolean = false; 
   //reconfigured text content
-  content;
+  content: string = " ";
   //stores pre-response values for response configuration and misspelled value change check; also used to set word count
-  splitContent;
+  splitContent: any[]; //string and regex
   //last character of unconfigured response for checking value changes of misspelled words
-  lastChar;
-  wordcount = 0; 
-
+  lastChar: any; //string and regex
+  wordcount: number = 0; 
   //configured response of results from api
-  response: any; 
+  response: { word: string, suggestions: string[], misspelled: boolean }[] = [
+    {word: " ", suggestions: [], misspelled: false}
+  ]; 
   //all misspelled results for checking value changes of misspelled words
-  misspellings: any; 
+  misspellings:{ word: string, suggestions: string[], misspelled: boolean }[] = [];  
+  //stores all ignored
+  ignored: string[] = [];  
+  //loading state boolean
+  loading: boolean = false;
 
   @ViewChild("contentBodyContainer") contentBodyContainer: ElementRef;
   
@@ -31,25 +36,20 @@ export class ContentComponent implements OnInit {
     this.fullScreen = !this.fullScreen;
   }
 
-  //input binding
-  onChange() {
-    this.setContent();
-    this.checkMisspelledChange();
-  }
-
   //configure text content for api request
   setContent () {
     // console.log("Raw:",this.content)
     // console.log("Live:",this.contentBodyContainer.nativeElement.textContent)
-    let noTrim = this.contentBodyContainer.nativeElement.textContent.replace(/No\sSuggestions\sFoundIgnore/g,"").replace(/Suggestions\s[a-zA-Z0-9 ]+\sIgnore/g,"").replace(/\s{3,}/g," ").replace(/\s{2}/g,"");
+    let noTrim = this.contentBodyContainer.nativeElement.textContent.replace(/No\sSuggestions\s(FoundIgnore|FoundSubmit)/g,"").replace(/Suggestions\s[a-zA-Z0-9 ]+\s(Ignore|Submit)/g,"").replace(/\s{3,}/g," ").replace(/\s{2}/g,"");
     this.lastChar = noTrim.split("")[noTrim.length -1];
     this.content = noTrim.trim();
     //prevents content-editable from delete innerHTML formatting
     if(!this.content.charCodeAt(0)) {
-      this.response = [{word: " ", suggestion: [], misspelled: false}];
+      this.response = [{word: " ", suggestions: [], misspelled: false}];
+      this.misspellings = [];
     }
     // console.log("next:",this.contentBodyContainer.nativeElement.textContent.charCodeAt(0))
-    // console.log("Set:",this.content)
+    console.log("Set:",this.content)
     this.splitContent = this.content.split(/\s+/);
     this.setWordCount();
   }
@@ -61,7 +61,7 @@ export class ContentComponent implements OnInit {
   //check button api call
   checkContent () {
     //configure to empty stay
-    if(!this.content) return; 
+    this.loading = true;
     let request = {content: this.content}
     // console.log("request",this.content)
     this.dictionary.checkContent(request)
@@ -73,6 +73,7 @@ export class ContentComponent implements OnInit {
             this.setContent();
             // console.log("response", this.response)
             this.misspellings = this.response.filter(result => result.misspelled);
+            this.loading = false; 
           },0);
       }, (error: Response) => {
         if(error.status === 404) {
@@ -123,34 +124,39 @@ export class ContentComponent implements OnInit {
       }
       //add space between words except for end
       if(i !== lastLoop) configuredResponse.push(createResult(""));
+      //don't consider ignored words as misspelled
+      if(this.ignored.indexOf(result.word) !== -1) result.misspelled = false; 
     }
     return configuredResponse;
   }
 
-
-  
-
-  checkMisspelledChange () {
-    for(let i = 0; i < this.misspellings.length; i++){
-      //when a character is added alter word to no longer be misspelled
-      if(this.splitContent.indexOf(this.misspellings[i].word) === -1){
-        // console.log("change:",this.misspellings[i], this.splitContent);
-        let index = this.response.findIndex(result => result.word === this.misspellings[i].word);
-        this.misspellings.splice(i,1);
-        this.response[index].misspelled = false;
-        this.setContent();
-      }
-      // same as above but incase a space is added
-      // console.log(this.misspellings[this.misspellings.length - 1].word === this.splitContent[this.splitContent.length - 1], this.lastChar.charCodeAt(0) )
-      if(this.lastChar && (this.lastChar.charCodeAt(0) === 115 || this.lastChar.charCodeAt(0) === 160) && (this.misspellings[this.misspellings.length - 1].word === this.splitContent[this.splitContent.length - 1])) {
-        let index = this.response.findIndex(result => result.word === this.misspellings[this.misspellings.length - 1].word);
-        this.misspellings.splice(i,1);
-        this.response[index].misspelled = false;
-        this.setContent();
-      }
-    }
-    // console.log(this.content)
+  addIgnored (ignored) {
+    this.ignored.push(ignored)
   }
+
+  //old method
+  // checkMisspelledChange () {
+    // for(let i = 0; i < this.misspellings.length; i++){
+    //   //when a character is added alter word to no longer be misspelled
+    //   if(this.splitContent.indexOf(this.misspellings[i].word) === -1){
+    //     // console.log("change:",this.misspellings[i], this.splitContent);
+    //     let index = this.response.findIndex(result => result.word === this.misspellings[i].word);
+    //     this.misspellings.splice(i,1);
+    //     console.log(index)
+    //     this.response[index].misspelled = false;
+    //     this.setContent();
+    //   }
+    //   // same as above but incase a space is added
+    //   // console.log(this.misspellings[this.misspellings.length - 1].word === this.splitContent[this.splitContent.length - 1], this.lastChar.charCodeAt(0) )
+    //   if(this.lastChar && (this.lastChar.charCodeAt(0) === 115 || this.lastChar.charCodeAt(0) === 160) && (this.misspellings[this.misspellings.length - 1].word === this.splitContent[this.splitContent.length - 1])) {
+    //     let index = this.response.findIndex(result => result.word === this.misspellings[this.misspellings.length - 1].word);
+    //     this.misspellings.splice(i,1);
+    //     this.response[index].misspelled = false;
+    //     this.setContent();
+    //   }
+    // }
+    // console.log(this.content)
+  // }
 
   //copy button
   copyContent () {
@@ -162,20 +168,20 @@ export class ContentComponent implements OnInit {
     document.body.removeChild(textarea);
   }
 
+  //erase button
+  eraseContent() {
+    this.response = [{word: " ", suggestions: [], misspelled: false}];
+    setTimeout(()=> this.setContent(), 0); 
+  }
+
   constructor(private dictionary: DictionaryService) {}
 
   //required to avoid initial animation for resize button transition 
   ngOnInit(): void {
-    //set initial content-editable user input
-    this.response = [{word: " ", suggestion: [], misspelled: false}];
-    this.misspellings = [];
-    //necessary to hide animation for resize keyfram on page load
     setTimeout(
       ()=> {
         this.preload = false;     
-        console.log("first:",this.contentBodyContainer.nativeElement.textContent.charCodeAt(0))
     },500)
   }
-
 
 }

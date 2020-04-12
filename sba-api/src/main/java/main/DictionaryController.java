@@ -61,14 +61,22 @@ public class DictionaryController {
 
                     //apply Levenshtein distance to each map and store all with a distance of 3 or less
                     ArrayList<Suggestion> suggestions = new ArrayList();
+                    int index = 0;
                     for ( Object currentEntry : entries.toArray()) {
-                        int distance = Levenshtein.calculate(currentWord, currentEntry.toString());
+                        //improve Levenshtein time for large results but cutting in half
+                        if(entries.size() > 100 && index%2 == 1) {
+                            index++;
+                            continue;
+                        }
 
+                        int distance = Levenshtein.calculate(currentWord, currentEntry.toString());
 
                         if(distance < 4) {
                             Suggestion suggestion = new Suggestion(currentEntry.toString(),distance);
                             suggestions.add(suggestion);
                         }
+
+                        index ++;
                     }
                     //sort remaining matches by Levenshtein distance in ascending order
                     Collections.sort(suggestions,Suggestion.CompareDistance);
