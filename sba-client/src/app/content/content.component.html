@@ -8,6 +8,7 @@
     <div class="content-body-container">
         <div #contentBodyContainer class="content-body" (input)="onChange()" contenteditable spellcheck="false">
             <ng-container *ngFor="let result of response; let index = index;">
+                <!-- prevents content-editable from delete innerHTML formatting -->
                 <span class="buffer" *ngIf="index < 1"></span>
                 <suggestion #suggestion [result]="result"> </suggestion>
             </ng-container>
@@ -20,7 +21,7 @@
                 <app-button [buttonType]="'check'" (click)="checkContent()"></app-button>
             </div>
             <div class="button-wrap">
-                <app-button [buttonType]="'erase'" (click)="eraseContent()" ></app-button>
+                <app-button [buttonType]="'copy'" (click)="copyContent()" ></app-button>
             </div>
         </div>
     </div>

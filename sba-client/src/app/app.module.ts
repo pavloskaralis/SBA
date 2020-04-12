@@ -7,15 +7,13 @@ import { AppComponent } from './app.component';
 import { ContentComponent } from './content/content.component';
 import { ButtonComponent } from './button/button.component';
 import { SuggestionComponent } from './suggestion/suggestion.component';
-import { SanitizeHtmlPipe } from './sanitize-html.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
     ContentComponent,
     ButtonComponent,
-    SuggestionComponent,
-    SanitizeHtmlPipe
+    SuggestionComponent
   ],
   imports: [
     BrowserModule,

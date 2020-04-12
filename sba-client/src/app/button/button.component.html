@@ -1,5 +1,5 @@
 
-<ng-container *ngTemplateOutlet="buttonType['check'] ? check : erase">
+<ng-container *ngTemplateOutlet="buttonType['check'] ? check : copy">
 </ng-container>
 
 <ng-template #check>
@@ -8,7 +8,7 @@
     </div>
 </ng-template>
     
-<ng-template #erase>
+<ng-template #copy>
     <div class="button" [class]="buttonType">
         {{ buttonType }}
     </div>
