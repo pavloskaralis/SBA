@@ -6,12 +6,9 @@
         </div>
     </div>
     <div class="content-body-container">
-        <div #contentBodyContainer autoFocus class="content-body" (input)="onChange()" contenteditable spellcheck="false">
+        <div #contentBodyContainer class="content-body" (input)="onChange()" contenteditable spellcheck="false">
             <ng-container *ngFor="let result of response; let index = index;">
-                <!-- <span class="buffer" *ngIf="index < 1" contenteditable="false"></span> -->
-
-                <!-- <span class="buffer" *ngIf="index < 1" contenteditable="false"></span> -->
-
+                <span class="buffer" *ngIf="index < 1"></span>
                 <suggestion #suggestion [result]="result"> </suggestion>
             </ng-container>
         </div>
