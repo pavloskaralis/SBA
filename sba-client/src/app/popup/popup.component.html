@@ -1,0 +1,8 @@
+<div class="popup-container" [class.check-message]="status.check" [class.copy-message]="!status.check">
+    <div class="message-wrap">
+        {{ status.message }}
+    </div>
+    <div class="button-wrap">
+        <div class="button" (click)="close()">x</div>
+    </div>
+</div>

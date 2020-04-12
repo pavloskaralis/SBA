@@ -11,14 +11,17 @@ import { StringifyOptions } from 'querystring';
   styleUrls: ['./suggestion.component.scss']
 })
 export class SuggestionComponent implements OnInit {
-  @Input() result: { word: string, suggestions: string[], misspelled: boolean };
+  @Input() 
+  result: { word: string, suggestions: string[], misspelled: boolean };
   //sets id of misspelled word to check if changed
-  @Input() wordID: string;
+  @Input() 
+  wordID: string;
   //other field of dropdown
   @Input()
   otherInput: string;
   //signals to parent to add word to ignored array
-  @Output() ignoreRequest = new EventEmitter<string>();
+  @Output() 
+  ignoreRequest = new EventEmitter<string>();
   //sets id of dropdown to check if overflowing
   dropdownID: string; 
   //title default; changes if no suggestions are found
@@ -96,13 +99,13 @@ export class SuggestionComponent implements OnInit {
     this.setTittle();
     this.dropdownID = this.wordID + "dropdown";
     //remove misspelled status if changed
-    window.addEventListener("keydown", () => {
-      setTimeout( ()=> {
-        if(this.misspelledWord && this.result && document.getElementById(this.wordID) && this.result.word !== document.getElementById(this.wordID).innerText) {
-          this.result.misspelled = false; 
-        }
-      },0);
-    });
+    // window.addEventListener("keydown", () => {
+    //   setTimeout( ()=> {
+    //     if(this.misspelledWord && this.result && document.getElementById(this.wordID) && this.result.word !== document.getElementById(this.wordID).innerText) {
+    //       this.result.misspelled = false; 
+    //     }
+    //   },0);
+    // });
   }
 
 }

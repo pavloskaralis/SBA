@@ -9,6 +9,8 @@ import { ContentComponent } from './content/content.component';
 import { ButtonComponent } from './button/button.component';
 import { SuggestionComponent } from './suggestion/suggestion.component';
 import { SpinnerComponent } from './spinner/spinner.component';
+import { PopupComponent } from './popup/popup.component';
+
 
 @NgModule({
   declarations: [
@@ -16,7 +18,8 @@ import { SpinnerComponent } from './spinner/spinner.component';
     ContentComponent,
     ButtonComponent,
     SuggestionComponent,
-    SpinnerComponent
+    SpinnerComponent,
+    PopupComponent
   ],
   imports: [
     BrowserModule,

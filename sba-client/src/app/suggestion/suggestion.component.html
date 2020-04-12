@@ -10,7 +10,7 @@
             <div [id]="dropdownID" class="dropdown-body">
                 <div class="dropdown-title">{{ title }}</div>
                 <div class="dropdown-suggestion" *ngFor="let suggestion of result.suggestions" (click)="updateWord(suggestion)"> {{suggestion}} </div>
-                <input [(ngModel)]="otherInput" (input)="otherChange()" placeholder="Other (Enter Text)" class="dropdown-other"/>
+                <input [(ngModel)]="otherInput" (keydown.enter)="updateWord(otherInput)" (input)="otherChange()" placeholder="Other (Enter Text)" class="dropdown-other"/>
                 <div *ngIf="!other" class="dropdown-ignore" (click)="ignore()">Ignore</div>
                 <div *ngIf="other" class="dropdown-ignore" (click)="updateWord(otherInput)">Submit</div>
             </div>

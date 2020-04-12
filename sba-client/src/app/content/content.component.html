@@ -5,19 +5,20 @@
             <div class="resize-button" (click)="resize()"></div>
         </div>
     </div>
+    <popup *ngIf="popup" [status]="status" (closeRequest)="closePopup()"></popup>
+    <spinner *ngIf="loading"></spinner>
     <div class="content-body-container">
-        <spinner *ngIf="loading"></spinner>
-        <div #contentBodyContainer class="content-body" (input)="setContent()" contenteditable spellcheck="false">
+        <div #contentBodyContainer class="content-body" [class.disabled-content]="loading" (input)="onChange()" contenteditable spellcheck="false">
             <ng-container *ngFor="let result of response; let index = index;">
                 <!-- prevents content-editable from delete innerHTML formatting -->
                 <span class="buffer" *ngIf="index < 1"></span>
-                <suggestion [result]="result" [wordID]="index" (ignoreRequest)="addIgnored(result.word)"> </suggestion>
+                <suggestion [result]="result"  [wordID]="index" (ignoreRequest)="addIgnored(result.word)"> </suggestion>
             </ng-container>
         </div>
     </div>
     <div class="content-footer" [class.inner-content-full]="fullScreen">
         <div class="word-count">Word Count: {{ wordcount }}</div>
-        <div class="button-container" [class.disabled]="loading">
+        <div class="button-container" [class.disabled-buttons]="loading">
             <div class="button-wrap">
                 <app-button [buttonType]="'check'" (click)="checkContent()"></app-button>
             </div>
