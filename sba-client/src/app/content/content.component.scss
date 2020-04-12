@@ -112,13 +112,13 @@
         background-color: $white;
         overflow: auto;
         
-        .content-body-hide {
-            display: none; 
-        }
+        
+   
 
         .content-body {
             width: 100%;
             height: 100%;
+         
             line-height: 26px;
             box-sizing: border-box;
             padding: 16px 20px;
@@ -129,9 +129,10 @@
             }
         }
 
-        .content-body-render {
-            @extend .content-body;
-            background-color:$white;
+        .buffer {
+            position: absolute;
+            min-width: 1px;
+            min-height: 1px;
         }
     }
 

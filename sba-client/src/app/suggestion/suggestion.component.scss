@@ -3,7 +3,7 @@
 .suggestion-container {
     display: inline-flex;
     flex-direction: column;
-  
+    
 
     // background: red; 
     
@@ -14,8 +14,7 @@
             min-width: 1px;
             color: $black;
             font-family: $fontB;
-            white-space: nowrap;
-
+            line-break: loose;
         }
         .correct-spelling {
             @extend .word;

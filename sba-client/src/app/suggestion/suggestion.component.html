@@ -2,7 +2,7 @@
 
 <ng-template #misspelled>
     <span class="suggestion-container">
-        <div class="misspelling" (click)="toggleDropdown()">
+        <div class="misspelling" (click)="toggleDropdown()" >
                 {{ result.word }}
         </div> 
         <div [id]="id" [class.dropdown-active]="dropdown" class="dropdown-container" contenteditable="false" [class.dropdown-right-overflow]="overflowRight" [class.dropdown-bottom-overflow]="overflowBottom">
@@ -19,7 +19,7 @@
 
 <ng-template #correct>
     <span class="suggestion-container">
-        <div class="correct-spelling" ng-bind-html="&nbsp;">
+        <div class="correct-spelling" ng-bind-html="&nbsp;" >
             {{ result.word ? result.word : "&nbsp;" }}
         </div> 
     </span>
