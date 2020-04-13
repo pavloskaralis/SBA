@@ -11,7 +11,9 @@
         <div #contentBodyContainer class="content-body" [class.disabled-content]="loading" (input)="onChange()" contenteditable spellcheck="false">
             <ng-container *ngFor="let result of response; let index = index;">
                 <!-- prevents content-editable from delete innerHTML formatting -->
-                <span class="buffer" *ngIf="index < 1"></span>
+                <span class="buffer" *ngIf="response.length === 1 && result.word === ' '" contenteditable="false">
+                    <suggestion [result]="result"  [wordID]="index" (ignoreRequest)="addIgnored(result.word)" (setRequest)="setContent()" contenteditable> </suggestion>
+                </span>
                 <suggestion [result]="result"  [wordID]="index" (ignoreRequest)="addIgnored(result.word)" (setRequest)="setContent()"> </suggestion>
             </ng-container>
         </div>

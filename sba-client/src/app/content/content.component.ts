@@ -47,17 +47,19 @@ export class ContentComponent implements OnInit {
   //configure text content for api request
   setContent () {
     // console.log("Raw:",this.content)
-    // console.log("Live:",this.contentBodyContainer.nativeElement.textContent)
+    console.log("Live:",this.contentBodyContainer.nativeElement.textContent)
     let noTrim = this.contentBodyContainer.nativeElement.textContent.replace(/No\sSuggestions\s(FoundIgnore|FoundSubmit)/g,"").replace(/Suggestions\s[a-zA-Z0-9 '\-]+\s(Ignore|Submit)/g,"").replace(/\s{3,}/g," ").replace(/\s{2}/g,"");
     this.lastChar = noTrim.split("")[noTrim.length -1];
     this.content = noTrim.trim();
     //prevents content-editable from delete innerHTML formatting
+    console.log("char",this.content.charCodeAt(0))
     if(!this.content.charCodeAt(0)) {
+      console.log("workss")
       this.response = [{word: " ", suggestions: [], misspelled: false}];
       this.misspellings = [];
     }
     // console.log("next:",this.contentBodyContainer.nativeElement.textContent.charCodeAt(0))
-    // console.log("Set:",this.content)
+    console.log("Set:",this.content)
     this.splitContent = this.content.replace(/[.,\/#!$%\^&\*;:{}=_`~()]/g,"").split(/\s+/);
     this.setWordCount();
   }

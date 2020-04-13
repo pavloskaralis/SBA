@@ -138,7 +138,10 @@
         .buffer {
             min-width: .1px;
             min-height: .1px;
+            position: absolute;
         }
+
+
     }
 
     .content-footer {
