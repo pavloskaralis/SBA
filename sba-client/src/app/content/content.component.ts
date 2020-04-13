@@ -41,7 +41,6 @@ export class ContentComponent implements OnInit {
   }
   //tracks user input to body content
   onChange() {
-    console.log("works")
     this.setContent();
     this.checkMisspelledChange();
   }

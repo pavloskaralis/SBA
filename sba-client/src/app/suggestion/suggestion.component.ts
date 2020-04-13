@@ -1,6 +1,5 @@
 import { Component, OnInit, Input, ElementRef, EventEmitter, Output, ViewChild } from '@angular/core';
-import { I18nPluralPipe } from '@angular/common';
-import { StringifyOptions } from 'querystring';
+import { DictionaryService } from '../dictionary.service';
 
 @Component({
   host: {
@@ -36,6 +35,7 @@ export class SuggestionComponent implements OnInit {
   overflowBottom: boolean = false;
   //toggles dropdown visibility
   dropdown: boolean = false;
+  //tracks ignored for database
 
   @ViewChild("suggestionContainer") suggestionContainer: ElementRef; 
   @ViewChild("misspelledWord") misspelledWord: ElementRef; 
@@ -78,30 +78,69 @@ export class SuggestionComponent implements OnInit {
     },0); 
   } 
 
-  //ignore button of dropdown
+  //ignore button of dropdown; sends selection to database
   ignore() {
     this.result.misspelled = false; 
     this.ignoreRequest.next();
+    let request = {
+      original: this.result.word,
+      original_length: this.result.word.length,
+      replacement: "",
+      replacement_length: 0,
+      ignored: true
+    }
+    this.addSelection(request);
   }
 
-  //when user clicks provided suggestion or inputs their own
-  updateWord(suggestion) {
-    this.result.word = suggestion; 
-    this.result.misspelled = false; 
-    setTimeout(()=>this.setRequest.next(),0);
-  }
-
-  //tracks user input of other suggestion
-  otherChange() {
+   //tracks user input of other suggestion
+   otherChange() {
     this.otherInput ? this.other = true : this.other = false;
     console.log(this.otherInput)
   }
+
+
+  //when user clicks provided suggestion or inputs their own; provides selection to database
+  updateWord(suggestion) {
+    let request = {
+      original: this.result.word,
+      original_length: this.result.word.length,
+      replacement: suggestion,
+      replacement_length: suggestion.length,
+      ignored: false
+    }
+    this.addSelection(request);
+    this.result.word = suggestion; 
+    this.result.misspelled = false; 
+    setTimeout(()=>{
+      this.setRequest.next(),0
+    });
+  }
+
+ 
+  //sends user's selection to database for any future relational table implementation
+  addSelection(request) {
+    // console.log("raw request", request)
+    JSON.stringify(request);
+    this.dictionary.addSelection(request)
+      .subscribe( response => {
+        console.log("added selection:",response)
+      }, (error: Response) => {
+        if(error.status === 404) {
+          console.log(error.status)
+        } else if (error.status === 400) {
+          console.log(error.status)
+        } else {
+          console.log(error.status)
+        }
+      })
+  }
   
-  constructor() { }
+  constructor(private dictionary: DictionaryService) { }
 
   ngOnInit(): void {
     this.setTittle();
     this.dropdownID = this.wordID + "dropdown";
+    //more laggy method than checkMisspelledChange in content component
     //remove misspelled status if changed
     // window.addEventListener("keydown", () => {
     //   setTimeout( ()=> {
@@ -111,5 +150,6 @@ export class SuggestionComponent implements OnInit {
     //   },0);
     // });
   }
+
 
 }

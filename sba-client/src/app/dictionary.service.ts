@@ -16,8 +16,8 @@ export class DictionaryService {
     return this.http.put(this.url, request);
   }
 
-  addSuggestion (suggestion) {
-    // return this.http.post(this.url, post)
+  addSelection (request) {
+    return this.http.post(this.url, request)
   }
 
 }
