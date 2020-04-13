@@ -248,12 +248,12 @@
     }
 }
 
+.disabled-content {
+    pointer-events: none;
+}
 
 .disabled-buttons {
     transition: .75s; 
-    opacity: .8;
-    pointer-events: none;
-}
-.disabled-content {
+    opacity: .85;
     pointer-events: none;
 }

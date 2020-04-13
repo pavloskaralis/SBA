@@ -36,8 +36,8 @@ public class DictionaryController {
         String content = body.get("content");
         WordArray words = new WordArray(content);
 
-        String test = new Gson().toJson(words);
-        System.out.print(test);
+//        String test = new Gson().toJson(words);
+//        System.out.print(test);
         //for each word
         String[] allContentWords = words.getWords();
         for (String currentWord: allContentWords) {
@@ -61,23 +61,18 @@ public class DictionaryController {
 
                     //apply Levenshtein distance to each map and store all with a distance of 3 or less
                     ArrayList<Suggestion> suggestions = new ArrayList();
-                    int index = 0;
-                    for ( Object currentEntry : entries.toArray()) {
-                        //improve Levenshtein time for large results but cutting in half
-                        if(entries.size() > 100 && index%2 == 1) {
-                            index++;
-                            continue;
-                        }
 
-                        int distance = Levenshtein.calculate(currentWord, currentEntry.toString());
+                    for (int i = 0; i < entries.size(); i ++) {
+
+                        int distance = Levenshtein.calculate(currentWord, entries.get(i).getWord());
 
                         if(distance < 4) {
-                            Suggestion suggestion = new Suggestion(currentEntry.toString(),distance);
+                            Suggestion suggestion = new Suggestion(entries.get(i).getWord(),distance);
                             suggestions.add(suggestion);
                         }
 
-                        index ++;
                     }
+//
                     //sort remaining matches by Levenshtein distance in ascending order
                     Collections.sort(suggestions,Suggestion.CompareDistance);
                     //extract up to 5 suggestions
