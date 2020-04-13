@@ -41,6 +41,7 @@ export class ContentComponent implements OnInit {
   }
   //tracks user input to body content
   onChange() {
+    console.log("works")
     this.setContent();
     this.checkMisspelledChange();
   }
@@ -69,6 +70,7 @@ export class ContentComponent implements OnInit {
   //check button api call
   checkContent () {
     //configure to empty stay
+    this.popup = false;
     this.loading = true;
     let request = {content: this.content}
     // console.log("request",this.content)
@@ -185,6 +187,7 @@ export class ContentComponent implements OnInit {
   //erase button
   eraseContent() {
     this.response = [{word: " ", suggestions: [], misspelled: false}];
+    this.popup = false; 
     setTimeout(()=> this.setContent(), 0); 
   }
 

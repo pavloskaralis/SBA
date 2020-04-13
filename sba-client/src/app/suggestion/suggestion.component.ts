@@ -22,6 +22,9 @@ export class SuggestionComponent implements OnInit {
   //signals to parent to add word to ignored array
   @Output() 
   ignoreRequest = new EventEmitter<string>();
+  //signals to parent to recheck content
+  @Output() 
+  setRequest = new EventEmitter<boolean>();
   //sets id of dropdown to check if overflowing
   dropdownID: string; 
   //title default; changes if no suggestions are found
@@ -85,6 +88,7 @@ export class SuggestionComponent implements OnInit {
   updateWord(suggestion) {
     this.result.word = suggestion; 
     this.result.misspelled = false; 
+    setTimeout(()=>this.setRequest.next(),0);
   }
 
   //tracks user input of other suggestion
