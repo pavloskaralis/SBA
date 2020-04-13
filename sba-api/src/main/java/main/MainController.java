@@ -22,10 +22,13 @@ import java.util.concurrent.TimeoutException;
 
 @CrossOrigin(origins = "*")
 @RestController
-public class DictionaryController {
+public class MainController {
 
     @Autowired
     DictionaryRepository dictionaryRepository;
+
+    @Autowired
+    SelectionRepository selectionRepository;
 
     @PutMapping("/")
     public String index(@RequestBody Map<String, String> body) throws InterruptedException, ExecutionException, TimeoutException, JsonProcessingException {
@@ -106,6 +109,16 @@ public class DictionaryController {
         //convert response object to json
         String jsonResponse = new Gson().toJson(results);
         return jsonResponse;
+    }
+
+    @PostMapping("/")
+    public Selection create(@RequestBody Map<String,String> body){
+        String original = body.get("original");
+        int original_length = Integer.parseInt(body.get("original_length"));
+        String replacement = body.get("replacement");
+        int replacement_length = Integer.parseInt(body.get("replacement_length"));
+        boolean ignored = Boolean.valueOf(body.get("ignored"));
+        return selectionRepository.save(new Selection(original,original_length,replacement,replacement_length,ignored));
     }
 
 }
