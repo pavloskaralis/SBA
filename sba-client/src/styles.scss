@@ -60,6 +60,10 @@ $black: rgb(50,50,50);
     background: lighten($pink, 12.5%); 
 }
 
-::placeholder {
+::-webkit-placeholder {
     color: darken($white, 40%);
 }
+
+[contenteditable] {
+    outline: 0px solid transparent;
+  }

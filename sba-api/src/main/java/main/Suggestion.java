@@ -37,8 +37,11 @@ public class Suggestion {
             int distance1 = s1.getDistance();
             int distance2 = s2.getDistance();
 
-            /*For ascending order*/
-            return distance1-distance2;
+            int length1 = s1.getWord().length();
+            int length2 = s2.getWord().length();
+
+            //prioritize longer word if match
+            return distance1 != distance2? distance1-distance2 : length2-length1;
         }
     };
 

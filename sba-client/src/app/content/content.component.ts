@@ -31,7 +31,8 @@ export class ContentComponent implements OnInit {
   popup: boolean = false; 
   //message for popup
   status: {message: string, check: boolean};
-  //disable content editable when loading
+  //track keydown for select all delete
+  keys: number[] = [];
 
   @ViewChild("contentBodyContainer") contentBodyContainer: ElementRef;
   
@@ -47,22 +48,17 @@ export class ContentComponent implements OnInit {
   //configure text content for api request
   setContent () {
     // console.log("Raw:",this.content)
-    console.log("Live:",this.contentBodyContainer.nativeElement.textContent)
+    // console.log("Live:",this.contentBodyContainer.nativeElement.textContent)
     let noTrim = this.contentBodyContainer.nativeElement.textContent.replace(/No\sSuggestions\s(FoundIgnore|FoundSubmit)/g,"").replace(/Suggestions\s[a-zA-Z0-9 '\-]+\s(Ignore|Submit)/g,"").replace(/\s{3,}/g," ").replace(/\s{2}/g,"");
     this.lastChar = noTrim.split("")[noTrim.length -1];
     this.content = noTrim.trim();
-    //prevents content-editable from delete innerHTML formatting
-    console.log("char",this.content.charCodeAt(0))
-    if(!this.content.charCodeAt(0)) {
-      console.log("workss")
-      this.response = [{word: " ", suggestions: [], misspelled: false}];
-      this.misspellings = [];
-    }
     // console.log("next:",this.contentBodyContainer.nativeElement.textContent.charCodeAt(0))
-    console.log("Set:",this.content)
-    this.splitContent = this.content.replace(/[.,\/#!$%\^&\*;:{}=_`~()]/g,"").split(/\s+/);
+    // console.log("Set:",this.content)
+    this.splitContent = this.content.replace(/^[.,\/#!$%\^&\*;:{}=_`~()]/g,"").split(/\s+/);
     this.setWordCount();
   }
+
+
 
   setWordCount() {
     this.splitContent[0] === "" ? this.wordcount = 0 : this.wordcount = this.splitContent.length;
@@ -77,12 +73,12 @@ export class ContentComponent implements OnInit {
     // console.log("request",this.content)
     this.dictionary.checkContent(request)
       .subscribe( response => {
-          console.log("raw response", response["results"])
+          // console.log("raw response", response["results"])
           let configuredResponse = this.configureResponse(response["results"]);
           setTimeout(()=> {
             this.response = configuredResponse;
             this.setContent();
-            console.log("response", this.response)
+            // console.log("configured response", this.response)
             this.misspellings = this.response.filter(result => result.misspelled);
             this.loading = false; 
             if(this.misspellings.length === 0) {
@@ -116,25 +112,31 @@ export class ContentComponent implements OnInit {
       //if result word exactly matches request word directly add it
       if(result.word === request){
         configuredResponse.push(result);
+        
         //otherwise
       } else {
         //if all but the last characters match
         if(result.word.slice(0,result.word.length - 1) === exceptLast) {
           //and the last character is s (plural)
+      
           if(lastChar === "s") {
             //add s back
             result.word += lastChar;
             configuredResponse.push(result);
+ 
+
             //and the last character is punctuation
           } else if (lastChar !== RegExp(/\w/)) {
             configuredResponse.push(result);
             //add punctuation
             configuredResponse.push(createResult(lastChar));
+     
           }
           //otherwise replace result with request
         } else {
           result.word = request;
           configuredResponse.push(result);
+
         }
       }
       //add space between words except for end
@@ -154,10 +156,10 @@ export class ContentComponent implements OnInit {
     for(let i = 0; i < this.misspellings.length; i++){
       //when a character is added alter word to no longer be misspelled
       if(this.splitContent.indexOf(this.misspellings[i].word) === -1){
-        console.log("change:",this.misspellings[i], this.splitContent);
+        // console.log("change:",this.misspellings[i], this.splitContent);
         let index = this.response.findIndex(result => result.word === this.misspellings[i].word);
         this.misspellings.splice(i,1);
-        console.log(index)
+        // console.log(index)
         this.response[index].misspelled = false;
         this.setContent();
       }
@@ -201,6 +203,32 @@ export class ContentComponent implements OnInit {
 
   //required to avoid initial animation for resize button transition 
   ngOnInit(): void {
+     //prevents content-editable from deleting innerHTML formatting
+    document.addEventListener("keydown", (e)=>{
+      if(this.keys.length === 0 && (e.keyCode === 224 || e.keyCode === 91 || e.keyCode === 17)) this.keys.push(e.keyCode);
+      if(this.keys.length === 1 && e.keyCode === 65) this.keys.push(e.keyCode);
+      if(this.keys.length === 2 && (e.keyCode === 46 || e.keyCode === 8)) this.keys.push(e.keyCode);
+      // console.log(e.keyCode)
+      // console.log("keys",this.keys,this.keys.length,e.keyCode)
+      if ((e.keyCode === 46 || e.keyCode === 8)&& this.content.length < 1) {
+        // console.log("blocked")
+          if (e.preventDefault) {
+            e.preventDefault();
+          } else {
+            e.returnValue = false;
+          }
+      } else if ((e.keyCode === 46 || e.keyCode === 8) && this.keys.length === 3) {
+        // console.log("switched")
+        if (e.preventDefault) {
+          e.preventDefault();
+        } else {
+          e.returnValue = false;
+        }
+        this.eraseContent();
+        this.keys = [];
+      }
+    });
+    
     setTimeout(
       ()=> {
         this.preload = false;     

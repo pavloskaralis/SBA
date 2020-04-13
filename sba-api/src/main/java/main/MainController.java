@@ -39,8 +39,8 @@ public class MainController {
         String content = body.get("content");
         WordArray words = new WordArray(content);
 
-//        String test = new Gson().toJson(words);
-//        System.out.print(test);
+        String test = new Gson().toJson(words);
+        System.out.print(test);
         //for each word
         String[] allContentWords = words.getWords();
         for (String currentWord: allContentWords) {

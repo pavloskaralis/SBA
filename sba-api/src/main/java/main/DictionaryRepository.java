@@ -16,6 +16,6 @@ public interface DictionaryRepository extends JpaRepository <Entry, Integer>{
     CompletableFuture<Entry> findByWordAndWordLength(String word, int wordLength);
 
     @Async
-    @Query(nativeQuery = true, value = "SELECT * FROM Entry WHERE soundex(word) LIKE soundex(:word) AND (word_length = (:wordLength - 1) OR word_length = :wordLength OR word_length = (:wordLength + 1))  LIMIT 20 ")
+    @Query(nativeQuery = true, value = "SELECT * FROM Entry WHERE soundex(word) LIKE soundex(:word) AND (word_length = (:wordLength - 1) OR word_length = :wordLength OR word_length = (:wordLength + 1))  LIMIT 15 ")
     CompletableFuture<List<Entry>> wordAndWordLength(@Param("word")String word, @Param("wordLength")int wordLength);
 }

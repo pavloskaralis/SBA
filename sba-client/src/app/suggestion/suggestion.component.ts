@@ -98,6 +98,7 @@ export class SuggestionComponent implements OnInit {
     console.log(this.otherInput)
   }
 
+    
 
   //when user clicks provided suggestion or inputs their own; provides selection to database
   updateWord(suggestion) {

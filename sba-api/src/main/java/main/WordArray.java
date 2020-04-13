@@ -26,7 +26,7 @@ public class WordArray {
         for (int i = 0; i < words.length; i++) {
             //break content down into words
             if( !words[i].matches("^\\W{1,}") ){
-                words[i] = words[i].replaceAll("[^\\w]", "");
+                words[i] = words[i].replaceAll("[^\\w-']$", "");
             }
             //if plural, replace with singular
             String singular = inflector.singularize(words[i]);
