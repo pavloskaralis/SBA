@@ -188,6 +188,8 @@ export class ContentComponent implements OnInit {
   eraseContent() {
     this.response = [{word: " ", suggestions: [], misspelled: false}];
     this.popup = false; 
+    this.misspellings= [];
+    this.ignored = [];
     setTimeout(()=> this.setContent(), 0); 
   }
 

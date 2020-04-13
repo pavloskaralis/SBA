@@ -21,7 +21,7 @@ export class SuggestionComponent implements OnInit {
   otherInput: string;
   //signals to parent to add word to ignored array
   @Output() 
-  ignoreRequest = new EventEmitter<string>();
+  ignoreRequest = new EventEmitter<boolean>();
   //signals to parent to recheck content
   @Output() 
   setRequest = new EventEmitter<boolean>();
