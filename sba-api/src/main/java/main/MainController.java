@@ -36,10 +36,12 @@ public class MainController {
         Response results = new Response();
 
         //retrieve spell checker content and create array of words
+//        System.out.print(body.get("content"));
         String content = body.get("content");
         WordArray words = new WordArray(content);
 
         String test = new Gson().toJson(words);
+        System.out.print("word array:");
         System.out.print(test);
         //for each word
         String[] allContentWords = words.getWords();

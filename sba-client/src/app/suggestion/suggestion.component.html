@@ -1,7 +1,7 @@
 <ng-container *ngTemplateOutlet="result.misspelled? misspelled : correct"></ng-container>
 
 <ng-template #misspelled>
-    <span #suggestionContainer class="suggestion-container">
+    <span hidden #suggestionContainer class="suggestion-container">
         <div #misspelledWord  [id]="wordID"  class="misspelling" (click)="toggleDropdown()">
                 {{ result.word }}
         </div> 

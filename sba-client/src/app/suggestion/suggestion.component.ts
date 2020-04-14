@@ -95,7 +95,7 @@ export class SuggestionComponent implements OnInit {
    //tracks user input of other suggestion
    otherChange() {
     this.otherInput ? this.other = true : this.other = false;
-    console.log(this.otherInput)
+    // console.log(this.otherInput)
   }
 
     
@@ -124,7 +124,7 @@ export class SuggestionComponent implements OnInit {
     JSON.stringify(request);
     this.dictionary.addSelection(request)
       .subscribe( response => {
-        console.log("added selection:",response)
+        // console.log("added selection:",response)
       }, (error: Response) => {
         if(error.status === 404) {
           console.log(error.status)

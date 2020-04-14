@@ -14,7 +14,7 @@
             min-width: 1px;
             color: $black;
             font-family: $fontB;
-            line-break: loose;
+            line-break: strict;
         }
         .correct-spelling {
             @extend .word;

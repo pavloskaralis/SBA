@@ -49,12 +49,14 @@ export class ContentComponent implements OnInit {
   setContent () {
     // console.log("Raw:",this.content)
     // console.log("Live:",this.contentBodyContainer.nativeElement.textContent)
-    let noTrim = this.contentBodyContainer.nativeElement.textContent.replace(/No\sSuggestions\s(FoundIgnore|FoundSubmit)/g,"").replace(/Suggestions\s[a-zA-Z0-9 '\-]+\s(Ignore|Submit)/g,"").replace(/\s{3,}/g," ").replace(/\s{2}/g,"");
+    let noTrim = this.contentBodyContainer.nativeElement.textContent.replace(/(No\s)?Suggestions\s([\w\s'\-]+)?((Found)?Ignore|(Found)?Submit)/g,"")
+
     this.lastChar = noTrim.split("")[noTrim.length -1];
     this.content = noTrim.trim();
     // console.log("next:",this.contentBodyContainer.nativeElement.textContent.charCodeAt(0))
     // console.log("Set:",this.content)
-    this.splitContent = this.content.replace(/^[.,\/#!$%\^&\*;:{}=_`~()]/g,"").split(/\s+/);
+    this.splitContent = this.content.split(/\s+/);
+    // console.log(this.content);
     this.setWordCount();
   }
 
@@ -69,11 +71,12 @@ export class ContentComponent implements OnInit {
     //configure to empty stay
     this.popup = false;
     this.loading = true;
+    // console.log(this.splitContent)
     let request = {content: this.content}
     // console.log("request",this.content)
     this.dictionary.checkContent(request)
       .subscribe( response => {
-          // console.log("raw response", response["results"])
+          console.log("raw response", response["results"])
           let configuredResponse = this.configureResponse(response["results"]);
           setTimeout(()=> {
             this.response = configuredResponse;
@@ -102,47 +105,35 @@ export class ContentComponent implements OnInit {
     let configuredResponse = [];
     let createResult = word => {return {word: word, suggestions: [], misspelled: false}};
     //re-add spacing and any removed characters from plural to singular conversion by api
+    let stringBuilder = "";
     for(let i = 0; i < response.length; i++) {
       let lastLoop = response.length - 1;
       let result = response[i];
       let request = this.splitContent[i];
+      
       let lastIndex = request.split("").length - 1;
       let lastChar = request.split("")[lastIndex];
       let exceptLast = request.slice(0,request.length - 1);
       //if result word exactly matches request word directly add it
       if(result.word === request){
         configuredResponse.push(result);
-        
-        //otherwise
+       //otherwise (because of api plural swap)
       } else {
         //if all but the last characters match
         if(result.word.slice(0,result.word.length - 1) === exceptLast) {
-          //and the last character is s (plural)
-      
-          if(lastChar === "s") {
-            //add s back
-            result.word += lastChar;
-            configuredResponse.push(result);
- 
-
-            //and the last character is punctuation
-          } else if (lastChar !== RegExp(/\w/)) {
-            configuredResponse.push(result);
-            //add punctuation
-            configuredResponse.push(createResult(lastChar));
-     
-          }
-          //otherwise replace result with request
+          result.word += lastChar;
+          configuredResponse.push(result);
         } else {
           result.word = request;
           configuredResponse.push(result);
-
         }
       }
-      //add space between words except for end
-      if(i !== lastLoop) configuredResponse.push(createResult(""));
       //don't consider ignored words as misspelled
       if(this.ignored.indexOf(result.word) !== -1) result.misspelled = false; 
+      //add space between words except for end
+      if(i !== lastLoop) configuredResponse.push(createResult(""));
+
+      
     }
     return configuredResponse;
   }
@@ -201,13 +192,19 @@ export class ContentComponent implements OnInit {
   }
   constructor(private dictionary: DictionaryService) {}
 
-  //required to avoid initial animation for resize button transition 
+
   ngOnInit(): void {
      //prevents content-editable from deleting innerHTML formatting
     document.addEventListener("keydown", (e)=>{
-      if(this.keys.length === 0 && (e.keyCode === 224 || e.keyCode === 91 || e.keyCode === 17)) this.keys.push(e.keyCode);
-      if(this.keys.length === 1 && e.keyCode === 65) this.keys.push(e.keyCode);
-      if(this.keys.length === 2 && (e.keyCode === 46 || e.keyCode === 8)) this.keys.push(e.keyCode);
+      
+      switch(this.keys.length) {
+        case 0: if(this.keys.length === 0 && (e.keyCode === 224 || e.keyCode === 91 || e.keyCode === 17)) this.keys.push(e.keyCode);
+        break;
+        case 1: this.keys.length === 1 && e.keyCode === 65 ? this.keys.push(e.keyCode) : this.keys = [];
+        break;
+        case 2: this.keys.length === 2 && (e.keyCode === 46 || e.keyCode === 8) ? this.keys.push(e.keyCode) : this.keys = [];
+      }
+     
       // console.log(e.keyCode)
       // console.log("keys",this.keys,this.keys.length,e.keyCode)
       if ((e.keyCode === 46 || e.keyCode === 8)&& this.content.length < 1) {
@@ -227,8 +224,20 @@ export class ContentComponent implements OnInit {
         this.eraseContent();
         this.keys = [];
       }
+      //format text on paste
+      document.addEventListener("paste", (event) => {
+          // let paste = (event.clipboardData).getData('text');
+  
+          // const selection = window.getSelection();
+          // if (!selection.rangeCount) return false;
+          // selection.deleteFromDocument();
+          // selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+
+          // event.preventDefault();
+          // this.setContent();
+         });
     });
-    
+      //required to avoid initial animation for resize button transition 
     setTimeout(
       ()=> {
         this.preload = false;     
