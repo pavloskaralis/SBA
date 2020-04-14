@@ -116,7 +116,7 @@
         width: 100%;
         height: 100%;
         background-color: $white;
-        overflow: auto;
+        overflow-y: scroll;
     
 
         .content-body {
@@ -127,11 +127,24 @@
             font-family: $fontB;
             line-height: 26px;
             box-sizing: border-box;
-            padding: 16px 20px;
+            padding: 16px 0 16px 20px;
             cursor: text;
 
             &:focus {
                 outline: none;
+            }
+
+            .correct-container {
+                display: inline-flex;
+                flex-direction: column;
+            
+                .correct-spelling {
+                    @extend .word;
+            
+                    &:focus {
+                        outline: none;
+                    }
+                }
             }
         }
 

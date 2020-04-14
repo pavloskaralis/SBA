@@ -38,7 +38,7 @@ export class SuggestionComponent implements OnInit {
   //tracks ignored for database
 
   @ViewChild("suggestionContainer") suggestionContainer: ElementRef; 
-  @ViewChild("misspelledWord") misspelledWord: ElementRef; 
+  // @ViewChild("misspelledWord") misspelledWord: ElementRef; 
 
   //on init checks for suggestions
   setTittle(){
@@ -61,21 +61,21 @@ export class SuggestionComponent implements OnInit {
 
   //realigns dropdown if overflowing
   checkOverflow () { 
-    let rightBorder = document.documentElement.clientWidth;
-    let bottomBorder = document.documentElement.clientHeight;
-    let dropdown = document.getElementById(this.dropdownID);
+    // let rightBorder = document.documentElement.clientWidth;
+    // let bottomBorder = document.documentElement.clientHeight;
+    // let dropdown = document.getElementById(this.dropdownID);
 
-    setTimeout(() => {
-      let positions = dropdown.getBoundingClientRect();
-      let rightPosition = positions["right"];
-      let bottomPosition = positions["bottom"];
+    // setTimeout(() => {
+    //   let positions = dropdown.getBoundingClientRect();
+    //   let rightPosition = positions["right"];
+    //   let bottomPosition = positions["bottom"];
 
-      let overflowRight = rightBorder - rightPosition;
-      let overflowBottom = bottomBorder - bottomPosition;
+    //   let overflowRight = rightBorder - rightPosition;
+    //   let overflowBottom = bottomBorder - bottomPosition;
   
-      if(overflowRight < 0) this.overflowRight = true;   
-      if(overflowBottom < 0) this.overflowBottom = true;   
-    },0); 
+    //   if(overflowRight < 0) this.overflowRight = true;   
+    //   if(overflowBottom < 0) this.overflowBottom = true;   
+    // },0); 
   } 
 
   //ignore button of dropdown; sends selection to database

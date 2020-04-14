@@ -116,6 +116,7 @@ export class ContentComponent implements OnInit {
       let exceptLast = request.slice(0,request.length - 1);
       //if result word exactly matches request word directly add it
       if(result.word === request){
+        result.word;
         configuredResponse.push(result);
        //otherwise (because of api plural swap)
       } else {
@@ -131,9 +132,41 @@ export class ContentComponent implements OnInit {
       //don't consider ignored words as misspelled
       if(this.ignored.indexOf(result.word) !== -1) result.misspelled = false; 
       //add space between words except for end
-      if(i !== lastLoop) configuredResponse.push(createResult(""));
-
+      if(i !== lastLoop && result.misspelled) configuredResponse.push(createResult(""));
+      // let lastLoop = response.length - 1;
+      // let result = response[i];
+      // let nextResult = response[i + 1];
+      // let request = this.splitContent[i];
       
+      // let lastIndex = request.split("").length - 1;
+      // let lastChar = request.split("")[lastIndex];
+      // let exceptLast = request.slice(0,request.length - 1);
+     
+
+      // if(result.word !== request && (result.word.slice(0,result.word.length - 1) === exceptLast)) {
+      //   result.word += lastChar;
+      // } else if (result.word !== request){
+      //   result.word = request;
+      // }
+      
+      // //don't consider ignored words as misspelled
+      // if(this.ignored.indexOf(result.word) !== -1) result.misspelled = false; 
+
+      // if(!result.misspelled){
+      //   stringBuilder += result.word + " ";
+
+      //   if(!nextResult || nextResult.misspelled) {
+      //     result.word = stringBuilder.trim(); 
+      //     configuredResponse.push(result);
+      //     stringBuilder = "";
+      //   }
+
+      // } else {
+      //   configuredResponse.push(result);
+      // }
+
+      // if(i !== lastLoop && stringBuilder.length === 0) configuredResponse.push(createResult(""));
+
     }
     return configuredResponse;
   }

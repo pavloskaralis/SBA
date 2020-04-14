@@ -4,27 +4,10 @@
     display: inline-flex;
     flex-direction: column;
     
-
-    // background: red; 
-    
-        .word {
-            display: inline-block;
-            height: 24px; 
-            min-height: 24px;
-            min-width: 1px;
-            color: $black;
-            font-family: $fontB;
-            line-break: strict;
-        }
-        .correct-spelling {
-            @extend .word;
-        }
-
         .misspelling{
             @extend .word;
             background-color: $yellow;
             cursor: pointer;
-            z-index: 1;
 
             &:focus {
                 outline: none;

@@ -28,6 +28,16 @@ $black: rgb(50,50,50);
     justify-content: center;
 }
 
+.word {
+    display: inline-block;
+    height: 24px; 
+    min-height: 24px;
+    min-width: .1px;
+    color: $black;
+    font-family: $fontB;
+    line-break: loose;
+}
+
 ::-webkit-scrollbar {
     width: 14px;
     height: 18px;
