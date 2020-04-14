@@ -37,12 +37,11 @@ public class WordArray {
                 Boolean quoteBack = false;
                 if(words[i].charAt(0) == '"'){quoteFront = true;}
                 if(words[i].charAt(words[i].length() - 1) == '"'){quoteBack = true;}
-                System.out.print(quoteFront);
-                System.out.print((quoteBack));
+//
                 words[i] = words[i].replaceAll("(^[^\\w.;:,!?\\-@#$%^&*=+\\]){}|/<>_]|[^\\w-@#$%^&*=+\\[({}|/<>_]$)", "");
                 if(quoteFront && !quoteBack) words[i] = '"' + words[i];
                 if(!quoteFront && quoteBack) words[i] += '"';
-                System.out.print(words[i]);
+//
             }
             //if plural, replace with singular
             String singular = inflector.singularize(words[i]);

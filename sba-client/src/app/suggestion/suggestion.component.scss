@@ -1,21 +1,26 @@
 @import '../../styles.scss';
 
+.dropdown-z-index {
+   z-index: 2;
+}
+
 .suggestion-container {
     display: inline-flex;
     flex-direction: column;
-    
+    position: relative;
+    transform: translateZ(0);
+
         .misspelling{
             @extend .word;
             background-color: $yellow;
             cursor: pointer;
-
-            &:focus {
+            &:focus { 
                 outline: none;
             }
         }
 
         .dropdown-active {
-            display: flex !important;
+            display: inline-flex !important;
         }
 
         .dropdown-row {
@@ -49,8 +54,7 @@
             position: fixed;
             display: none;
             flex-direction: column;
-            z-index: 2;
-    
+        
             .dropdown-fill {
                 @extend .dropdown-row;
                 background-color: transparent;

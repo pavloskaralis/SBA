@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { DictionaryService } from '../dictionary.service';
+import { last } from 'rxjs/operators';
 
 @Component({
   selector: 'content',
@@ -43,24 +44,26 @@ export class ContentComponent implements OnInit {
   //tracks user input to body content
   onChange() {
     this.setContent();
-    this.checkMisspelledChange();
+    setTimeout(()=> this.checkMisspelledChange(), 0);
+  
+  }
+
+  //set content buffer for suggestion submit emit or manual user change
+  buffer() {
+
+    setTimeout( ()=> this.setContent(), 0);
   }
   //configure text content for api request
   setContent () {
-    // console.log("Raw:",this.content)
-    // console.log("Live:",this.contentBodyContainer.nativeElement.textContent)
-    let noTrim = this.contentBodyContainer.nativeElement.textContent.replace(/(No\s)?Suggestions\s([\w\s'\-]+)?((Found)?Ignore|(Found)?Submit)/g,"")
-
-    this.lastChar = noTrim.split("")[noTrim.length -1];
-    this.content = noTrim.trim();
-    // console.log("next:",this.contentBodyContainer.nativeElement.textContent.charCodeAt(0))
-    // console.log("Set:",this.content)
+    console.log("Live:",this.contentBodyContainer.nativeElement.textContent)
+    let noTrim = this.contentBodyContainer.nativeElement.textContent.replace(/Suggestions.+?[^(Found)](Ignore|Submit)/,"").replace(/No\sSuggestions.+?(FoundIgnore|FoundSubmit)/g,"");
+    this.lastChar = noTrim.split("")[noTrim.length -1].charCodeAt(0);
+    this.content = noTrim.trim().replace(/\u00A0/g,"").replace(/\s{2,}/g," ");
+    console.log("set:", this.content)
     this.splitContent = this.content.split(/\s+/);
-    // console.log(this.content);
+    // console.log("split",this.splitContent);
     this.setWordCount();
   }
-
-
 
   setWordCount() {
     this.splitContent[0] === "" ? this.wordcount = 0 : this.wordcount = this.splitContent.length;
@@ -71,12 +74,11 @@ export class ContentComponent implements OnInit {
     //configure to empty stay
     this.popup = false;
     this.loading = true;
-    // console.log(this.splitContent)
     let request = {content: this.content}
     // console.log("request",this.content)
     this.dictionary.checkContent(request)
       .subscribe( response => {
-          console.log("raw response", response["results"])
+          // console.log("raw response", response["results"])
           let configuredResponse = this.configureResponse(response["results"]);
           setTimeout(()=> {
             this.response = configuredResponse;
@@ -105,18 +107,15 @@ export class ContentComponent implements OnInit {
     let configuredResponse = [];
     let createResult = word => {return {word: word, suggestions: [], misspelled: false}};
     //re-add spacing and any removed characters from plural to singular conversion by api
-    let stringBuilder = "";
     for(let i = 0; i < response.length; i++) {
       let lastLoop = response.length - 1;
       let result = response[i];
       let request = this.splitContent[i];
-      
       let lastIndex = request.split("").length - 1;
       let lastChar = request.split("")[lastIndex];
       let exceptLast = request.slice(0,request.length - 1);
       //if result word exactly matches request word directly add it
       if(result.word === request){
-        result.word;
         configuredResponse.push(result);
        //otherwise (because of api plural swap)
       } else {
@@ -124,81 +123,49 @@ export class ContentComponent implements OnInit {
         if(result.word.slice(0,result.word.length - 1) === exceptLast) {
           result.word += lastChar;
           configuredResponse.push(result);
-        } else {
-          result.word = request;
-          configuredResponse.push(result);
+        // } else if(/[.,;!?:]/.test(lastChar) && result.misspelled) {
+        //     result.word = request.slice(0,lastIndex);
+        //     configuredResponse.push(result);
+        //     configuredResponse.push(createResult(lastChar));
+        //     // console.log("configured",configuredResponse)
+          } else {
+            result.word = request;
+            configuredResponse.push(result);
         }
       }
       //don't consider ignored words as misspelled
       if(this.ignored.indexOf(result.word) !== -1) result.misspelled = false; 
       //add space between words except for end
       if(i !== lastLoop && result.misspelled) configuredResponse.push(createResult(""));
-      // let lastLoop = response.length - 1;
-      // let result = response[i];
-      // let nextResult = response[i + 1];
-      // let request = this.splitContent[i];
-      
-      // let lastIndex = request.split("").length - 1;
-      // let lastChar = request.split("")[lastIndex];
-      // let exceptLast = request.slice(0,request.length - 1);
-     
-
-      // if(result.word !== request && (result.word.slice(0,result.word.length - 1) === exceptLast)) {
-      //   result.word += lastChar;
-      // } else if (result.word !== request){
-      //   result.word = request;
-      // }
-      
-      // //don't consider ignored words as misspelled
-      // if(this.ignored.indexOf(result.word) !== -1) result.misspelled = false; 
-
-      // if(!result.misspelled){
-      //   stringBuilder += result.word + " ";
-
-      //   if(!nextResult || nextResult.misspelled) {
-      //     result.word = stringBuilder.trim(); 
-      //     configuredResponse.push(result);
-      //     stringBuilder = "";
-      //   }
-
-      // } else {
-      //   configuredResponse.push(result);
-      // }
-
-      // if(i !== lastLoop && stringBuilder.length === 0) configuredResponse.push(createResult(""));
-
     }
+
     return configuredResponse;
   }
 
   addIgnored (ignored) {
+    // console.log("ignore received")
     this.ignored.push(ignored)
   }
 
   //old method
   checkMisspelledChange () {
+    // console.log("original response",this.response)
     for(let i = 0; i < this.misspellings.length; i++){
-      //when a character is added alter word to no longer be misspelled
-      if(this.splitContent.indexOf(this.misspellings[i].word) === -1){
-        // console.log("change:",this.misspellings[i], this.splitContent);
-        let index = this.response.findIndex(result => result.word === this.misspellings[i].word);
+      let misspelled = this.misspellings[i].word;
+      let contentIndex = this.splitContent.indexOf(misspelled);
+      let lastSplitIndex = this.splitContent.length - 1; 
+      let responseIndex = this.response.findIndex(result => result.word === misspelled);
+      // console.log("before change",misspelled,this.splitContent)
+      //if misspelled word no longer exists in content due to character change or if last input was a space and misspelled word is the last word of content
+      if(contentIndex === -1 || (this.lastChar === 115 || this.lastChar === 160) && (misspelled === this.splitContent[lastSplitIndex])) {
         this.misspellings.splice(i,1);
-        // console.log(index)
-        this.response[index].misspelled = false;
-        this.setContent();
+        this.response[responseIndex].misspelled = false;
+        this.buffer();        
+        // console.log("Changed",misspelled,this.splitContent)
       }
-      // same as above but incase a space is added
-      // console.log(this.misspellings[this.misspellings.length - 1].word === this.splitContent[this.splitContent.length - 1], this.lastChar.charCodeAt(0) )
-      if(this.lastChar && (this.lastChar.charCodeAt(0) === 115 || this.lastChar.charCodeAt(0) === 160) && (this.misspellings[this.misspellings.length - 1].word === this.splitContent[this.splitContent.length - 1])) {
-        let index = this.response.findIndex(result => result.word === this.misspellings[this.misspellings.length - 1].word);
-        this.misspellings.splice(i,1);
-        this.response[index].misspelled = false;
-        this.setContent();
-      }
-    }
-    // console.log(this.content)
+      // console.log("here",this.response[responseIndex],this.response[responseIndex+1], this.response)
   }
-
+}
   //copy button
   copyContent () {
     let textarea = document.createElement("textarea")
@@ -223,6 +190,7 @@ export class ContentComponent implements OnInit {
   closePopup() {
     this.popup = false;
   }
+
   constructor(private dictionary: DictionaryService) {}
 
 
@@ -259,16 +227,20 @@ export class ContentComponent implements OnInit {
       }
       //format text on paste
       document.addEventListener("paste", (event) => {
-          // let paste = (event.clipboardData).getData('text');
+          let paste = (event.clipboardData).getData('text');
   
-          // const selection = window.getSelection();
-          // if (!selection.rangeCount) return false;
-          // selection.deleteFromDocument();
-          // selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+          const selection = window.getSelection();
+          if (!selection.rangeCount) return false;
+          selection.deleteFromDocument();
+          selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+          event.preventDefault();
 
-          // event.preventDefault();
-          // this.setContent();
-         });
+          this.setContent();
+          selection.empty();
+          // let id = "last";
+          // console.log("element", document.getElementById(id),id)
+          // document.getElementById(id).focus()
+        });
     });
       //required to avoid initial animation for resize button transition 
     setTimeout(

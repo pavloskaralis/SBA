@@ -45,7 +45,8 @@ export class SuggestionComponent implements OnInit {
     if(this.result.suggestions && this.result.suggestions.length < 1) this.title = "No Suggestions Found";
   }
 
-  toggleDropdown() {
+  toggleDropdown(event) {
+    event.preventDefault(); 
     this.dropdown = !this.dropdown;
     this.dropdown? this.checkOverflow() : ()=> {this.overflowRight=false; this.overflowBottom=false}; 
   }
@@ -53,29 +54,36 @@ export class SuggestionComponent implements OnInit {
   //allows offclick toggle of dropdown
   dropdownOffClick(event) {
     if (this.suggestionContainer && !this.suggestionContainer.nativeElement.contains(event.target)) { // or some similar check
-      if(this.dropdown) this.dropdown=false; 
+      if(this.dropdown) {
+        this.dropdown=false; 
+        this.overflowRight=false; 
+        this.overflowBottom=false; 
+      }
     }
-    this.overflowRight=false; 
-    this.overflowBottom=false; 
   }
 
   //realigns dropdown if overflowing
   checkOverflow () { 
-    // let rightBorder = document.documentElement.clientWidth;
-    // let bottomBorder = document.documentElement.clientHeight;
-    // let dropdown = document.getElementById(this.dropdownID);
+    let content = document.querySelector('.content-container');
+    let dropdown = document.getElementById(this.dropdownID);
 
-    // setTimeout(() => {
-    //   let positions = dropdown.getBoundingClientRect();
-    //   let rightPosition = positions["right"];
-    //   let bottomPosition = positions["bottom"];
+    setTimeout(() => {
+    
+      let borders = content.getBoundingClientRect();
+      let rightBorder = borders["right"];
+      let bottomBorder = borders["bottom"];
 
-    //   let overflowRight = rightBorder - rightPosition;
-    //   let overflowBottom = bottomBorder - bottomPosition;
+      let positions = dropdown.getBoundingClientRect();
+      let rightPosition = positions["right"];
+      let bottomPosition = positions["bottom"];
+
+      let overflowRight = rightBorder - rightPosition;
+      let overflowBottom = bottomBorder - bottomPosition;
   
-    //   if(overflowRight < 0) this.overflowRight = true;   
-    //   if(overflowBottom < 0) this.overflowBottom = true;   
-    // },0); 
+      if(overflowRight < 0) this.overflowRight = true;   
+      if(overflowBottom < 0) this.overflowBottom = true;   
+
+    },0); 
   } 
 
   //ignore button of dropdown; sends selection to database
@@ -112,9 +120,10 @@ export class SuggestionComponent implements OnInit {
     this.addSelection(request);
     this.result.word = suggestion; 
     this.result.misspelled = false; 
-    setTimeout(()=>{
-      this.setRequest.next(),0
-    });
+    // setTimeout(()=>{
+    this.setRequest.next()
+      console.log("request sent")
+    // });
   }
 
  
@@ -135,21 +144,13 @@ export class SuggestionComponent implements OnInit {
         }
       })
   }
-  
+
   constructor(private dictionary: DictionaryService) { }
 
   ngOnInit(): void {
     this.setTittle();
     this.dropdownID = this.wordID + "dropdown";
-    //more laggy method than checkMisspelledChange in content component
-    //remove misspelled status if changed
-    // window.addEventListener("keydown", () => {
-    //   setTimeout( ()=> {
-    //     if(this.misspelledWord && this.result && document.getElementById(this.wordID) && this.result.word !== document.getElementById(this.wordID).innerText) {
-    //       this.result.misspelled = false; 
-    //     }
-    //   },0);
-    // });
+
   }
 
 

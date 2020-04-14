@@ -7,20 +7,16 @@
     </div>
     <popup *ngIf="popup" [status]="status" (closeRequest)="closePopup()"></popup>
     <spinner *ngIf="loading"></spinner>
-    <div class="content-body-container">
+    <div autoFocus id="content-body" class="content-body-container">
         <div #contentBodyContainer class="content-body" [class.disabled-content]="loading" (input)="onChange()" contenteditable spellcheck="false">
-            <ng-container *ngFor="let result of response; let index = index;">
-                <!-- prevents content-editable from delete innerHTML formatting; not needed with event listener -->
-                <!-- <span class="buffer" *ngIf="response.length === 1 && result.word === ' ' && content.length < 2" contenteditable="false">
-                    <suggestion contenteditable [result]="result" [wordID]="index" (ignoreRequest)="addIgnored(result.word)" (setRequest)="setContent()"> </suggestion>
-                </span> -->
-                <suggestion *ngIf="result.misspelled" [result]="result"  [wordID]="index" (ignoreRequest)="addIgnored(result.word)" (setRequest)="setContent()">  </suggestion>
+            <ng-container *ngFor="let result of response; let index = index">
+                <suggestion *ngIf="result.misspelled" [result]="result"  [wordID]="index" (ignoreRequest)="addIgnored(result.word)" (setRequest)="buffer()">  </suggestion>
 
                 <span *ngIf="!result.misspelled" class="correct-container">
                     <div class="correct-spelling" ng-bind-html="&nbsp;" >
-                        {{ result.word !== " " ? result.word + "&nbsp;" : result.word }}
+                        {{ result.word !== " " && index !== response.length - 1 && response[index + 1].word !== "" ? result.word + "&nbsp;" : result.word }}
                     </div> 
-                </span>
+                </span>      
             </ng-container>
         </div>
     </div>
