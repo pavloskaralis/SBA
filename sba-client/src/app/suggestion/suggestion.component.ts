@@ -49,15 +49,15 @@ export class SuggestionComponent implements OnInit {
     event.preventDefault(); 
     this.dropdown = !this.dropdown;
     this.dropdown? this.checkOverflow() : ()=> {this.overflowRight=false; this.overflowBottom=false}; 
+    this.other = false;
+    this.otherInput = "";
   }
 
   //allows offclick toggle of dropdown
   dropdownOffClick(event) {
     if (this.suggestionContainer && !this.suggestionContainer.nativeElement.contains(event.target)) { // or some similar check
       if(this.dropdown) {
-        this.dropdown=false; 
-        this.overflowRight=false; 
-        this.overflowBottom=false; 
+        this.toggleDropdown(event); 
       }
     }
   }

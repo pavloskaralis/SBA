@@ -44,7 +44,7 @@ export class ContentComponent implements OnInit {
   //tracks user input to body content
   onChange() {
     this.setContent();
-    setTimeout(()=> this.checkMisspelledChange(), 0);
+    // setTimeout(()=> this.checkMisspelledChange(), 0);
   
   }
 
@@ -148,24 +148,24 @@ export class ContentComponent implements OnInit {
   }
 
   //old method
-  checkMisspelledChange () {
-    // console.log("original response",this.response)
-    for(let i = 0; i < this.misspellings.length; i++){
-      let misspelled = this.misspellings[i].word;
-      let contentIndex = this.splitContent.indexOf(misspelled);
-      let lastSplitIndex = this.splitContent.length - 1; 
-      let responseIndex = this.response.findIndex(result => result.word === misspelled);
-      // console.log("before change",misspelled,this.splitContent)
-      //if misspelled word no longer exists in content due to character change or if last input was a space and misspelled word is the last word of content
-      if(contentIndex === -1 || (this.lastChar === 115 || this.lastChar === 160) && (misspelled === this.splitContent[lastSplitIndex])) {
-        this.misspellings.splice(i,1);
-        this.response[responseIndex].misspelled = false;
-        this.buffer();        
-        // console.log("Changed",misspelled,this.splitContent)
-      }
-      // console.log("here",this.response[responseIndex],this.response[responseIndex+1], this.response)
-  }
-}
+  // checkMisspelledChange () {
+  //   // console.log("original response",this.response)
+  //   for(let i = 0; i < this.misspellings.length; i++){
+  //     let misspelled = this.misspellings[i].word;
+  //     let contentIndex = this.splitContent.indexOf(misspelled);
+  //     let lastSplitIndex = this.splitContent.length - 1; 
+  //     let responseIndex = this.response.findIndex(result => result.word === misspelled);
+  //     // console.log("before change",misspelled,this.splitContent)
+  //     //if misspelled word no longer exists in content due to character change or if last input was a space and misspelled word is the last word of content
+  //     if(contentIndex === -1 || (this.lastChar === 115 || this.lastChar === 160) && (misspelled === this.splitContent[lastSplitIndex])) {
+  //       this.misspellings.splice(i,1);
+  //       this.response[responseIndex].misspelled = false;
+  //       this.buffer();        
+  //       // console.log("Changed",misspelled,this.splitContent)
+  //     }
+  //     // console.log("here",this.response[responseIndex],this.response[responseIndex+1], this.response)
+  // }
+// }
   //copy button
   copyContent () {
     let textarea = document.createElement("textarea")
