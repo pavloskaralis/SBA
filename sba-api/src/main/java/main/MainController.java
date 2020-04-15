@@ -110,6 +110,7 @@ public class MainController {
         }
         //convert response object to json
         String jsonResponse = new Gson().toJson(results);
+        System.out.print(jsonResponse);
         return jsonResponse;
     }
 

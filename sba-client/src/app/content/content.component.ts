@@ -35,19 +35,14 @@ export class ContentComponent implements OnInit {
   //track keydown for select all delete
   keys: number[] = [];
 
-  @ViewChild("contentBodyContainer") contentBodyContainer: ElementRef;
+  @ViewChild("contentBody") contentBody: ElementRef;
   
   //resize button
   resize() {
     this.fullScreen = !this.fullScreen;
   }
-  //tracks user input to body content
-  onChange() {
-    console.log("on change",this.content);
-    this.setContent();
-    // setTimeout(()=> this.checkMisspelledChange(), 0);
+
   
-  }
 
   //set content buffer for suggestion submit emit or manual user change
   buffer() {
@@ -55,15 +50,16 @@ export class ContentComponent implements OnInit {
   }
   //configure text content for api request
   setContent () {
-    console.log("Live:",this.contentBodyContainer.nativeElement.textContent)
-    let noTrim = this.contentBodyContainer.nativeElement.textContent.replace(/(No\sSuggestions)/g,"NoSuggestions").replace(/[^(No)]Suggestions.+?[^(Found)](Ignore|Submit)/g," ").replace(/NoSuggestions\s(FoundIgnore|FoundSubmit)/g," ");
-    this.lastChar = noTrim.split("")[noTrim.length -1].charCodeAt(0);
+    console.log("Live:",this.contentBody.nativeElement.textContent)
+    let noTrim = this.contentBody.nativeElement.textContent.replace(/(No\sSuggestions)/g,"NoSuggestions").replace(/[^(No)]Suggestions.+?[^(Found)](Ignore|Submit)/g," ").replace(/NoSuggestions\s(FoundIgnore|FoundSubmit)/g," ");
+    this.lastChar;
+    if(noTrim) this.lastChar = noTrim.split("")[noTrim.length -1].charCodeAt(0);
     setTimeout( ()=> {
-    this.content = noTrim.replace(/\s{2,}/g," ").trim();
-    console.log("set:", this.content)
-    this.splitContent = this.content.split(/\s+/);
-    // console.log("split",this.splitContent);
-    this.setWordCount();
+      this.content = noTrim.replace(/\s{2,}/g," ").replace(/\u00A0/g," ").trim();
+      console.log("set:", this.content)
+      this.splitContent = this.content.split(/\s+/);
+      console.log("split",this.splitContent);
+      this.setWordCount();
     },0); 
   }
 
@@ -76,16 +72,17 @@ export class ContentComponent implements OnInit {
     //configure to empty stay
     this.popup = false;
     this.loading = true;
+    if(this.content.length === 0) this.content = " ";
     let request = {content: this.content}
     // console.log("request",this.content)
     this.dictionary.checkContent(request)
       .subscribe( response => {
-          // console.log("raw response", response["results"])
+          console.log("raw response", response["results"])
           let configuredResponse = this.configureResponse(response["results"]);
           setTimeout(()=> {
             this.response = configuredResponse;
             this.setContent();
-            // console.log("configured response", this.response)
+            console.log("configured response", this.response)
             this.misspellings = this.response.filter(result => result.misspelled);
             this.loading = false; 
             if(this.misspellings.length === 0) {
@@ -228,21 +225,27 @@ export class ContentComponent implements OnInit {
         this.keys = [];
       }
       //format text on paste
-      document.addEventListener("paste", (event) => {
-          let paste = (event.clipboardData).getData('text');
-  
-          const selection = window.getSelection();
-          if (!selection.rangeCount) return false;
-          selection.deleteFromDocument();
-          selection.getRangeAt(0).insertNode(document.createTextNode(paste));
-          event.preventDefault();
+      // document.addEventListener("paste", (event) => {
+          // let paste = (event.clipboardData).getData('text/plain');
+          // event.preventDefault();
+          // event.clipboardData["bubbles"] = false; 
+          // // console.log(event)
 
-          this.setContent();
-          selection.empty();
-          // let id = "last";
-          // console.log("element", document.getElementById(id),id)
-          // document.getElementById(id).focus()
-        });
+          // const selection = window.getSelection();
+          // if (!selection.rangeCount) return false;
+          // selection.deleteFromDocument();
+          // selection.getRangeAt(0).insertNode(document.createTextNode(paste));
+     
+          // selection.removeAllRanges();
+          // this.setContent();
+          // console.log(document.getElementById("content-body"))
+         
+          // setTimeout(()=> {
+          //   let content = document.getElementById("content-body");
+          //   content.click();
+          //   content.focus();
+          // }, 0);
+    //   });
     });
       //required to avoid initial animation for resize button transition 
     setTimeout(

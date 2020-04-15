@@ -7,13 +7,13 @@
     </div>
     <popup *ngIf="popup" [status]="status" (closeRequest)="closePopup()"></popup>
     <spinner *ngIf="loading"></spinner>
-    <div autoFocus id="content-body" class="content-body-container">
-        <div #contentBodyContainer class="content-body" [class.disabled-content]="loading" (input)="onChange()" contenteditable spellcheck="false">
-            <ng-container *ngFor="let result of response; let index = index">
+    <div class="content-body-container">
+        <div #contentBody autofocus id="content-body" class="content-body" [class.disabled-content]="loading" (input)="setContent()" contenteditable spellcheck="false">
+            <ng-container *ngFor="let result of response; let index = index ">
                 <suggestion *ngIf="result.misspelled" [result]="result"  [wordID]="index" (ignoreRequest)="addIgnored(result.word)" (setRequest)="buffer()">  </suggestion>
 
                 <span *ngIf="!result.misspelled" class="correct-container">
-                    <div class="correct-spelling" ng-bind-html="&nbsp;" >
+                    <div id="correct" class="correct-spelling" ng-bind-html="&nbsp;" >
                         {{ index !== response.length - 1 && response[index + 1].word !== "" ? result.word + "&nbsp;" : result.word }}
                         <br *ngIf="index === response.length - 1 && result.word === '' "/>
                     </div> 
