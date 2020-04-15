@@ -50,15 +50,15 @@ export class ContentComponent implements OnInit {
   }
   //configure text content for api request
   setContent () {
-    console.log("Live:",this.contentBody.nativeElement.textContent)
+    // console.log("Live:",this.contentBody.nativeElement.textContent)
     let noTrim = this.contentBody.nativeElement.textContent.replace(/(No\sSuggestions)/g,"NoSuggestions").replace(/[^(No)]Suggestions.+?[^(Found)](Ignore|Submit)/g," ").replace(/NoSuggestions\s(FoundIgnore|FoundSubmit)/g," ");
     this.lastChar;
     if(noTrim) this.lastChar = noTrim.split("")[noTrim.length -1].charCodeAt(0);
     setTimeout( ()=> {
       this.content = noTrim.replace(/\s{2,}/g," ").replace(/\u00A0/g," ").trim();
-      console.log("set:", this.content)
+      // console.log("set:", this.content)
       this.splitContent = this.content.split(/\s+/);
-      console.log("split",this.splitContent);
+      // console.log("split",this.splitContent);
       this.setWordCount();
     },0); 
   }
@@ -77,12 +77,12 @@ export class ContentComponent implements OnInit {
     // console.log("request",this.content)
     this.dictionary.checkContent(request)
       .subscribe( response => {
-          console.log("raw response", response["results"])
+          // console.log("raw response", response["results"])
           let configuredResponse = this.configureResponse(response["results"]);
           setTimeout(()=> {
             this.response = configuredResponse;
             this.setContent();
-            console.log("configured response", this.response)
+            // console.log("configured response", this.response)
             this.misspellings = this.response.filter(result => result.misspelled);
             this.loading = false; 
             if(this.misspellings.length === 0) {
@@ -146,25 +146,6 @@ export class ContentComponent implements OnInit {
     this.ignored.push(ignored)
   }
 
-  //old method
-  // checkMisspelledChange () {
-  //   // console.log("original response",this.response)
-  //   for(let i = 0; i < this.misspellings.length; i++){
-  //     let misspelled = this.misspellings[i].word;
-  //     let contentIndex = this.splitContent.indexOf(misspelled);
-  //     let lastSplitIndex = this.splitContent.length - 1; 
-  //     let responseIndex = this.response.findIndex(result => result.word === misspelled);
-  //     // console.log("before change",misspelled,this.splitContent)
-  //     //if misspelled word no longer exists in content due to character change or if last input was a space and misspelled word is the last word of content
-  //     if(contentIndex === -1 || (this.lastChar === 115 || this.lastChar === 160) && (misspelled === this.splitContent[lastSplitIndex])) {
-  //       this.misspellings.splice(i,1);
-  //       this.response[responseIndex].misspelled = false;
-  //       this.buffer();        
-  //       // console.log("Changed",misspelled,this.splitContent)
-  //     }
-  //     // console.log("here",this.response[responseIndex],this.response[responseIndex+1], this.response)
-  // }
-// }
   //copy button
   copyContent () {
     let textarea = document.createElement("textarea")
@@ -200,13 +181,12 @@ export class ContentComponent implements OnInit {
       switch(this.keys.length) {
         case 0: if(this.keys.length === 0 && (e.keyCode === 224 || e.keyCode === 91 || e.keyCode === 17)) this.keys.push(e.keyCode);
         break;
-        case 1: this.keys.length === 1 && e.keyCode === 65 ? this.keys.push(e.keyCode) : this.keys = [];
+        case 1: this.keys.length === 1 && (e.keyCode === 65 || e.keyCode == 67) ? this.keys.push(e.keyCode) : this.keys = [];
         break;
-        case 2: this.keys.length === 2 && (e.keyCode === 46 || e.keyCode === 8) ? this.keys.push(e.keyCode) : this.keys = [];
+        case 2: this.keys.length === 2 && (e.keyCode === 46 || e.keyCode === 8 || e.keyCode === 67 ) ? this.keys.push(e.keyCode) : this.keys = [];
       }
      
-      // console.log(e.keyCode)
-      // console.log("keys",this.keys,this.keys.length,e.keyCode)
+      //if backspace with no content disable delete
       if ((e.keyCode === 46 || e.keyCode === 8)&& this.content.length < 1) {
         // console.log("blocked")
           if (e.preventDefault) {
@@ -214,8 +194,9 @@ export class ContentComponent implements OnInit {
           } else {
             e.returnValue = false;
           }
+      // if control a delete swap with erase method
       } else if ((e.keyCode === 46 || e.keyCode === 8) && this.keys.length === 3) {
-        // console.log("switched")
+        console.log("switched")
         if (e.preventDefault) {
           e.preventDefault();
         } else {
@@ -223,7 +204,23 @@ export class ContentComponent implements OnInit {
         }
         this.eraseContent();
         this.keys = [];
+      // if control c
+      } else if (e.keyCode === 67 && this.keys.length > 1) {
+        console.log("coppied")
+        if (e.preventDefault) {
+          e.preventDefault();
+        } else {
+          e.returnValue = false;
+        }
+        let textarea = document.createElement("textarea")
+        textarea.value = this.content;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        this.keys = [];
       }
+
       //format text on paste
       // document.addEventListener("paste", (event) => {
           // let paste = (event.clipboardData).getData('text/plain');
