@@ -1,39 +1,42 @@
-<div class="content-container content-container-shrink" [class.preload]="preload" [class]="fullScreen ? 'content-container-grow' : 'content-container-shrink'">
-    <div class="content-header" [class.inner-content-full]="fullScreen">
-        <div class="header-title">S.B.A. Spell Checker</div>
-        <div class="resize-container">
-            <div class="resize-button" (click)="resize()"></div>
+<!-- outer wrap necessary for safarri resize glitch -->
+<span class="content-wrap">
+    <div class="content-container content-container-shrink" [class.preload]="preload" [class]="fullScreen ? 'content-container-grow' : 'content-container-shrink'">
+        <div class="content-header" [class.inner-content-full]="fullScreen">
+            <div class="header-title">S.B.A. Spell Checker</div>
+            <div class="resize-container">
+                <div class="resize-button" (click)="resize()"></div>
+            </div>
         </div>
-    </div>
-    <popup *ngIf="popup" [status]="status" (closeRequest)="closePopup()"></popup>
-    <spinner *ngIf="loading"></spinner>
-    <div class="content-body-container">
-        <div #contentBody autofocus id="content-body" class="content-body" [class.disabled-content]="loading" (input)="setContent()" contenteditable spellcheck="false">
-            <ng-container *ngFor="let result of response; let index = index ">
-                <suggestion *ngIf="result.misspelled" [result]="result"  [wordID]="index" (ignoreRequest)="addIgnored(result.word)" (setRequest)="buffer()">  </suggestion>
+        <popup *ngIf="popup" [status]="status" (closeRequest)="closePopup()"></popup>
+        <spinner *ngIf="loading"></spinner>
+        <div class="content-body-container">
+            <div #contentBody autofocus id="content-body" class="content-body" [class.disabled-content]="loading" (input)="setContent()" contenteditable spellcheck="false">
+                <ng-container *ngFor="let result of response; let index = index ">
+                    
+                    <suggestion *ngIf="result.misspelled" [result]="result"  [wordID]="index" (ignoreRequest)="addIgnored(result.word)" (setRequest)="buffer()">  </suggestion>
 
-                <span *ngIf="!result.misspelled" class="correct-container">
-                    <div id="correct" class="correct-spelling" ng-bind-html="&nbsp;" >
-                        {{ index !== response.length - 1 && response[index + 1].word !== "" ? result.word + "&nbsp;" : result.word }}
-                        <br *ngIf="index === response.length - 1 && result.word === '' "/>
-                    </div> 
-                </span>      
-            </ng-container>
-        </div>
-    </div>
-    <div class="content-footer" [class.inner-content-full]="fullScreen">
-        <div class="word-count">Word Count: {{ wordcount }}</div>
-        <div class="button-container" [class.disabled-buttons]="loading">
-            <div class="button-wrap">
-                <app-button [buttonType]="'check'" (click)="checkContent()"></app-button>
-            </div>
-            <div class="button-wrap">
-                <app-button [buttonType]="'copy'" (click)="copyContent()" ></app-button>
-            </div>
-            <div class="button-wrap">
-                <app-button [buttonType]="'erase'" (click)="eraseContent()" ></app-button>
+                    <span *ngIf="!result.misspelled" class="correct-container">
+                        <div class="correct-spelling" ng-bind-html="&nbsp;" >
+                            {{ index !== response.length - 1 && response[index + 1].word !== "" ? result.word + "&nbsp;" : result.word }}
+                            <br *ngIf="index === response.length - 1 && result.word === '' "/>
+                        </div> 
+                    </span>      
+                </ng-container>
             </div>
         </div>
+        <div class="content-footer" [class.inner-content-full]="fullScreen">
+            <div class="word-count">Word Count: {{ wordcount }}</div>
+            <div class="button-container" [class.disabled-buttons]="loading">
+                <div class="button-wrap">
+                    <app-button [buttonType]="'check'" (click)="checkContent()"></app-button>
+                </div>
+                <div class="button-wrap">
+                    <app-button [buttonType]="'copy'" (click)="copyContent()" ></app-button>
+                </div>
+                <div class="button-wrap">
+                    <app-button [buttonType]="'erase'" (click)="eraseContent()" ></app-button>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
-
+</span>

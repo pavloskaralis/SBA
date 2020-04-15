@@ -52,11 +52,10 @@ export class ContentComponent implements OnInit {
   setContent () {
     // console.log("Live:",this.contentBody.nativeElement.textContent)
     let noTrim = this.contentBody.nativeElement.textContent.replace(/(No\sSuggestions)/g,"NoSuggestions").replace(/[^(No)]Suggestions.+?[^(Found)](Ignore|Submit)/g," ").replace(/NoSuggestions\s(FoundIgnore|FoundSubmit)/g," ");
-    this.lastChar;
     if(noTrim) this.lastChar = noTrim.split("")[noTrim.length -1].charCodeAt(0);
     setTimeout( ()=> {
       this.content = noTrim.replace(/\s{2,}/g," ").replace(/\u00A0/g," ").trim();
-      // console.log("set:", this.content)
+      // console.log("set:", this.content)      
       this.splitContent = this.content.split(/\s+/);
       // console.log("split",this.splitContent);
       this.setWordCount();
@@ -160,6 +159,7 @@ export class ContentComponent implements OnInit {
 
   //erase button
   eraseContent() {
+    console.log("erased")
     this.response = [{word: " ", suggestions: [], misspelled: false}];
     this.popup = false; 
     this.misspellings= [];
@@ -176,8 +176,7 @@ export class ContentComponent implements OnInit {
 
   ngOnInit(): void {
      //prevents content-editable from deleting innerHTML formatting
-    document.addEventListener("keydown", (e)=>{
-      
+    document.addEventListener("keydown", (e)=>{      
       switch(this.keys.length) {
         case 0: if(this.keys.length === 0 && (e.keyCode === 224 || e.keyCode === 91 || e.keyCode === 17)) this.keys.push(e.keyCode);
         break;
@@ -187,13 +186,15 @@ export class ContentComponent implements OnInit {
       }
      
       //if backspace with no content disable delete
-      if ((e.keyCode === 46 || e.keyCode === 8)&& this.content.length < 1) {
-        // console.log("blocked")
+      console.log(this.response.length, this.misspellings.length === 1)
+      if ((e.keyCode === 46 || e.keyCode === 8) && (this.content.length < 2 || (this.response.length === 2 && this.misspellings.length === 1)) ) {
+        console.log("blocked")
           if (e.preventDefault) {
             e.preventDefault();
           } else {
             e.returnValue = false;
           }
+          this.eraseContent();
       // if control a delete swap with erase method
       } else if ((e.keyCode === 46 || e.keyCode === 8) && this.keys.length === 3) {
         console.log("switched")

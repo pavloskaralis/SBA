@@ -1,3 +1,4 @@
+<!-- outer span necessary for z index overlap; transformZ() messeses with behavior -->
 <span [class.dropdown-z-index]="dropdown">
     <span #suggestionContainer [class.dropdown-z-index]="dropdown" contenteditable class="suggestion-container">
         <div [id]="wordID" class="misspelling" (click)="toggleDropdown($event)" contenteditable="false">
