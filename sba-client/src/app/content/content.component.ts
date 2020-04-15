@@ -69,7 +69,8 @@ export class ContentComponent implements OnInit {
   //check button api call
   checkContent () {
     //configure to empty stay
-    this.popup = false;
+    // this.popup = false;
+    this.status = {message: "Loading...", check: true};
     this.loading = true;
     if(this.content.length === 0) this.content = " ";
     let request = {content: this.content}
@@ -84,10 +85,10 @@ export class ContentComponent implements OnInit {
             // console.log("configured response", this.response)
             this.misspellings = this.response.filter(result => result.misspelled);
             this.loading = false; 
-            if(this.misspellings.length === 0) {
-              this.popup = true;
-              this.status = {message: "No Misspellings Found", check: true};
-            }
+          
+            this.popup = true;
+            this.status = this.misspellings.length === 0 ? {message: "No Misspellings Found", check: true} : {message: "Click A Word To Edit", check: true};
+            
           },0);
       }, (error: Response) => {
         if(error.status === 404) {
