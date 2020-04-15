@@ -43,6 +43,7 @@ export class ContentComponent implements OnInit {
   }
   //tracks user input to body content
   onChange() {
+    console.log("on change",this.content);
     this.setContent();
     // setTimeout(()=> this.checkMisspelledChange(), 0);
   
@@ -50,19 +51,20 @@ export class ContentComponent implements OnInit {
 
   //set content buffer for suggestion submit emit or manual user change
   buffer() {
-
     setTimeout( ()=> this.setContent(), 0);
   }
   //configure text content for api request
   setContent () {
     console.log("Live:",this.contentBodyContainer.nativeElement.textContent)
-    let noTrim = this.contentBodyContainer.nativeElement.textContent.replace(/Suggestions.+?[^(Found)](Ignore|Submit)/,"").replace(/No\sSuggestions.+?(FoundIgnore|FoundSubmit)/g,"");
+    let noTrim = this.contentBodyContainer.nativeElement.textContent.replace(/(No\sSuggestions)/g,"NoSuggestions").replace(/[^(No)]Suggestions.+?[^(Found)](Ignore|Submit)/g," ").replace(/NoSuggestions\s(FoundIgnore|FoundSubmit)/g," ");
     this.lastChar = noTrim.split("")[noTrim.length -1].charCodeAt(0);
-    this.content = noTrim.trim().replace(/\u00A0/g,"").replace(/\s{2,}/g," ");
+    setTimeout( ()=> {
+    this.content = noTrim.replace(/\s{2,}/g," ").trim();
     console.log("set:", this.content)
     this.splitContent = this.content.split(/\s+/);
     // console.log("split",this.splitContent);
     this.setWordCount();
+    },0); 
   }
 
   setWordCount() {
@@ -184,7 +186,7 @@ export class ContentComponent implements OnInit {
     this.popup = false; 
     this.misspellings= [];
     this.ignored = [];
-    setTimeout(()=> this.setContent(), 0); 
+    this.buffer();
   }
 
   closePopup() {
