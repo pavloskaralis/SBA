@@ -14,7 +14,8 @@
 
                 <span *ngIf="!result.misspelled" class="correct-container">
                     <div class="correct-spelling" ng-bind-html="&nbsp;" >
-                        {{ result.word !== " " && index !== response.length - 1 && response[index + 1].word !== "" ? result.word + "&nbsp;" : result.word }}
+                        {{ index !== response.length - 1 && response[index + 1].word !== "" ? result.word + "&nbsp;" : result.word }}
+                        <br *ngIf="index === response.length - 1 && result.word === '' "/>
                     </div> 
                 </span>      
             </ng-container>

@@ -1,6 +1,6 @@
 <span [class.dropdown-z-index]="dropdown">
     <span #suggestionContainer [class.dropdown-z-index]="dropdown" contenteditable class="suggestion-container">
-        <div [id]="wordID" class="misspelling" (click)="toggleDropdown($event)">
+        <div [id]="wordID" class="misspelling" (click)="toggleDropdown($event)" contenteditable="false">
                 {{ result.word }}
         </div> 
         <div [class.dropdown-active]="dropdown" class="dropdown-container" contenteditable="false" [class.dropdown-right-overflow]="overflowRight" [class.dropdown-bottom-overflow]="overflowBottom">

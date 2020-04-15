@@ -20,7 +20,7 @@ export class ContentComponent implements OnInit {
   wordcount: number = 0; 
   //configured response of results from api
   response: { word: string, suggestions: string[], misspelled: boolean }[] = [
-    {word: " ", suggestions: [], misspelled: false}
+    {word: "", suggestions: [], misspelled: false}
   ]; 
   //all misspelled results for checking value changes of misspelled words
   misspellings:{ word: string, suggestions: string[], misspelled: boolean }[] = [];  
@@ -136,7 +136,7 @@ export class ContentComponent implements OnInit {
       //don't consider ignored words as misspelled
       if(this.ignored.indexOf(result.word) !== -1) result.misspelled = false; 
       //add space between words except for end
-      if(i !== lastLoop && result.misspelled) configuredResponse.push(createResult(""));
+      if(result.misspelled) configuredResponse.push(createResult(""));
     }
 
     return configuredResponse;
