@@ -160,7 +160,7 @@ export class ContentComponent implements OnInit {
 
   //erase button
   eraseContent() {
-    console.log("erased")
+    // console.log("erased")
     this.response = [{word: " ", suggestions: [], misspelled: false}];
     this.popup = false; 
     this.misspellings= [];
@@ -190,7 +190,7 @@ export class ContentComponent implements OnInit {
       //if backspace with no content disable delete
       // console.log(this.response.length, this.misspellings.length === 1)
       if ((e.keyCode === 46 || e.keyCode === 8) && (this.content.length < 2 || this.content.length === this.misspellings[0].word.length) ) {
-        console.log("blocked")
+        // console.log("blocked")
           if (e.preventDefault) {
             e.preventDefault();
           } else {
@@ -199,7 +199,7 @@ export class ContentComponent implements OnInit {
           this.eraseContent();
       // if control a delete swap with erase method
       } else if ((e.keyCode === 46 || e.keyCode === 8) && this.keys.length === 3) {
-        console.log("switched")
+        // console.log("switched")
         if (e.preventDefault) {
           e.preventDefault();
         } else {
@@ -209,7 +209,7 @@ export class ContentComponent implements OnInit {
         this.keys = [];
       // if control c
       } else if (e.keyCode === 67 && this.keys.length > 1) {
-        console.log("coppied")
+        // console.log("coppied")
         if (e.preventDefault) {
           e.preventDefault();
         } else {
