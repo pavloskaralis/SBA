@@ -1,7 +1,7 @@
 Live Link: https://sba-spell-checker.herokuapp.com/
 
 Purpose: 
-The S.B.A. Spell Checker is created to serve as a phonetically oriented spell-checking API, which can be later morphed into a typo frequency spell checker as user input grows. In respect to the client, it is modeled after other online spell checkers, rather than the auto-correct implemented in document writing programs. 
+The SBA Spell Checker is created to serve as a phonetically oriented spell-checking API, which can be later morphed into a typo frequency spell checker as user input grows. In respect to the client, it is modeled after other online spell checkers, rather than the auto-correct implemented in document writing programs. 
 
 Technologies: Angular, Spring Boot, MySQL, Regex, SCSS
 
