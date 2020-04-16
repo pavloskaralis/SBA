@@ -6,8 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="spa-api" />
         <module name="sba-api" />
+        <module name="spa-api" />
       </profile>
     </annotationProcessing>
   </component>

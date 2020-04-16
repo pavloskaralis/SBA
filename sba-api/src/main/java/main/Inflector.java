@@ -591,6 +591,18 @@ public class Inflector {
         inflect.addIrregular("does", "does");
         inflect.addIrregular("to", "to");
         inflect.addIrregular("was", "was");
+        inflect.addIrregular("cs", "cs");
+        inflect.addIrregular("ds", "ds");
+        inflect.addIrregular("es", "es");
+        inflect.addIrregular("fs", "fs");
+        inflect.addIrregular("gs", "gs");
+        inflect.addIrregular("hs", "hs");
+        inflect.addIrregular("ls", "ls");
+        inflect.addIrregular("ms", "ms");
+        inflect.addIrregular("ns", "ns");
+        inflect.addIrregular("os", "os");
+        inflect.addIrregular("ys", "ys");
+
 
         inflect.addUncountable("equipment", "information", "rice", "money", "species", "series", "fish", "sheep");
     }
