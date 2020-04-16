@@ -186,9 +186,10 @@ export class ContentComponent implements OnInit {
         case 2: this.keys.length === 2 && (e.keyCode === 46 || e.keyCode === 8 || e.keyCode === 67 ) ? this.keys.push(e.keyCode) : this.keys = [];
       }
      
+      // console.log("content:", this.content.length, "response:", this.response.length, "misspelled:", this.misspellings[0].word.length)
       //if backspace with no content disable delete
-      console.log(this.response.length, this.misspellings.length === 1)
-      if ((e.keyCode === 46 || e.keyCode === 8) && (this.content.length < 2 || (this.response.length === 2 && this.misspellings.length === 1)) ) {
+      // console.log(this.response.length, this.misspellings.length === 1)
+      if ((e.keyCode === 46 || e.keyCode === 8) && (this.content.length < 2 || this.content.length === this.misspellings[0].word.length) ) {
         console.log("blocked")
           if (e.preventDefault) {
             e.preventDefault();
