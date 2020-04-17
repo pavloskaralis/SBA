@@ -132,8 +132,8 @@ export class ContentComponent implements OnInit {
             configuredResponse.push(result);
         }
       }
-      //don't consider ignored words as misspelled
-      if(this.ignored.indexOf(result.word) !== -1) result.misspelled = false; 
+      //don't consider ignored words as misspelled or numbers
+      if((this.ignored.indexOf(result.word) !== -1) || result.word.match(/^\d+$/)) result.misspelled = false; 
       //add space between words except for end
       if(result.misspelled) configuredResponse.push(createResult(""));
     }
@@ -160,7 +160,7 @@ export class ContentComponent implements OnInit {
 
   //erase button
   eraseContent() {
-    console.log("erased")
+    // console.log("erased")
     this.response = [{word: " ", suggestions: [], misspelled: false}];
     this.popup = false; 
     this.misspellings= [];
@@ -192,7 +192,7 @@ export class ContentComponent implements OnInit {
       //if backspace with no content disable delete
       // console.log(this.response.length, this.misspellings.length === 1)
       if ((e.keyCode === 46 || e.keyCode === 8) && (this.content.length < 2 || (this.misspellings[0] && this.content.length === this.misspellings[0].word.length)) ) {
-        console.log("blocked")
+        // console.log("blocked")
           if (e.preventDefault) {
             e.preventDefault();
           } else {
@@ -201,7 +201,7 @@ export class ContentComponent implements OnInit {
           this.eraseContent();
       // if control a delete swap with erase method
       } else if ((e.keyCode === 46 || e.keyCode === 8) && this.keys.length === 3) {
-        console.log("switched")
+        // console.log("switched")
         if (e.preventDefault) {
           e.preventDefault();
         } else {
@@ -211,7 +211,7 @@ export class ContentComponent implements OnInit {
         this.keys = [];
       // if control c
       } else if (e.keyCode === 67 && this.keys.length > 1 && (window.getSelection().getRangeAt(0).toString().length >= this.content.length)) {
-        console.log("coppied")
+        // console.log("coppied")
         if (e.preventDefault) {
           e.preventDefault();
         } else {
@@ -225,7 +225,6 @@ export class ContentComponent implements OnInit {
         document.body.removeChild(textarea);
         this.keys = [];
       }
-      console.log(window.getSelection().getRangeAt(0).toString().length)
       //format text on paste
       // document.addEventListener("paste", (event) => {
           // let paste = (event.clipboardData).getData('text/plain');
