@@ -7,7 +7,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class PopupComponent implements OnInit {
   @Input()
-  status: {message: string, check: boolean};
+  status: {message: string, type: string};
   @Output()
   closeRequest = new EventEmitter<boolean>(); 
 

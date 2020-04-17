@@ -1,4 +1,4 @@
-<div class="popup-container" [class.check-message]="status.check" [class.copy-message]="!status.check">
+<div class="popup-container" [class.check-message]="status.type === 'check'" [class.copy-message]="status.type === 'copy'" [class.error-message]="status.type === 'error'">
     <div class="message-wrap">
         {{ status.message }}
     </div>

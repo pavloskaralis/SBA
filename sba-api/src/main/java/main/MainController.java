@@ -46,7 +46,7 @@ public class MainController {
         //for each word
         String[] allContentWords = words.getWords();
         for (String currentWord: allContentWords) {
-            System.out.print(currentWord);
+//            System.out.print(currentWord);
             //check if word matches a dictionary word and length (more time efficient)
             CompletableFuture<Entry> future = dictionaryRepository.findByWordAndWordLength(currentWord, currentWord.length());
             Entry entry = future.get();
