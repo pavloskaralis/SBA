@@ -71,7 +71,7 @@ public class MainController {
 
                         int distance = Levenshtein.calculate(currentWord, entries.get(i).getWord());
 
-                        if(distance < 4) {
+                        if(distance < 5) {
                             Suggestion suggestion = new Suggestion(entries.get(i).getWord(),distance);
                             suggestions.add(suggestion);
                         }
